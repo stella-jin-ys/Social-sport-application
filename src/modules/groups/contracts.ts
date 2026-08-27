@@ -1,6 +1,15 @@
 export type Audience = "Women only" | "Mixed group" | "Open to all";
 export type AttendanceChoice = "GOING" | "NOT_GOING";
 
+export type AttendanceResult = {
+  status: AttendanceChoice;
+  goingCount: number;
+};
+
+export type AttendanceActionResult =
+  | { ok: true; status: AttendanceChoice; goingCount: number }
+  | { ok: false; code: "AUTH_REQUIRED" | "NOT_MEMBER" | "SESSION_NOT_FOUND" | "UNKNOWN"; message: string };
+
 export type JoinResult = {
   membershipId: string;
   joined: boolean;

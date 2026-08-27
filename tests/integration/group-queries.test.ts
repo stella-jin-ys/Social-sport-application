@@ -1,6 +1,8 @@
 import { beforeEach, expect, it } from "vitest";
-import { prisma, resetDomainData } from "./database";
+import { createTestUser, prisma, resetDomainData } from "./database";
+import { setAttendance } from "@/modules/activities/attendance-service";
 import { listPublicGroups, getGroupPageData } from "@/modules/groups/group-queries";
+import { joinOpenGroup } from "@/modules/groups/membership-service";
 import { seedGroups } from "@/modules/groups/seed-groups";
 
 beforeEach(async () => {
@@ -24,4 +26,19 @@ it("returns a public detail without private viewer state", async () => {
     attendanceStatus: null,
   });
   expect(group?.nextTraining?.id).toBe("session-soder-sparks-next");
+});
+
+it("returns member and attendance state for an authenticated viewer", async () => {
+  await createTestUser("member-a");
+  await joinOpenGroup("member-a", "soder-sparks");
+  await setAttendance("member-a", "session-soder-sparks-next", "GOING");
+
+  const group = await getGroupPageData("soder-sparks", "member-a");
+
+  expect(group?.viewer).toEqual({
+    isAuthenticated: true,
+    isMember: true,
+    attendanceStatus: "GOING",
+  });
+  expect(group?.nextTraining?.goingCount).toBe(13);
 });

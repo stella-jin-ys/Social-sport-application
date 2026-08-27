@@ -8,12 +8,18 @@ vi.mock("@/modules/groups/membership-service", () => ({
   joinOpenGroup: vi.fn(),
 }));
 
+vi.mock("@/modules/activities/attendance-service", () => ({
+  AttendanceError: class AttendanceError extends Error {},
+  setAttendance: vi.fn(),
+}));
+
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }));
 
-import { joinGroupAction } from "@/app/groups/[slug]/actions";
+import { joinGroupAction, setAttendanceAction } from "@/app/groups/[slug]/actions";
 import { getCurrentUser } from "@/lib/current-user";
+import { setAttendance } from "@/modules/activities/attendance-service";
 import { joinOpenGroup } from "@/modules/groups/membership-service";
 
 beforeEach(() => {
@@ -27,4 +33,13 @@ it("does not call the membership service without a session", async () => {
 
   expect(result).toMatchObject({ ok: false, code: "AUTH_REQUIRED" });
   expect(joinOpenGroup).not.toHaveBeenCalled();
+});
+
+it("does not call the attendance service without a session", async () => {
+  vi.mocked(getCurrentUser).mockResolvedValue(null);
+
+  const result = await setAttendanceAction("session-soder-sparks-next", "GOING");
+
+  expect(result).toMatchObject({ ok: false, code: "AUTH_REQUIRED" });
+  expect(setAttendance).not.toHaveBeenCalled();
 });
