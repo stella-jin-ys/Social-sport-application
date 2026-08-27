@@ -16,11 +16,18 @@ export async function setAttendance(
   status: AttendanceChoice,
 ): Promise<AttendanceResult> {
   return prisma.$transaction(async (tx) => {
-    const session = await tx.activitySession.findUnique({ where: { id: sessionId } });
+    const lockedSession = await tx.$queryRaw<{ id: string }[]>`
+      SELECT "id"
+      FROM "ActivitySession"
+      WHERE "id" = ${sessionId}
+      FOR UPDATE
+    `;
 
-    if (!session) {
+    if (!lockedSession[0]) {
       throw new AttendanceError("SESSION_NOT_FOUND", "Training session not found.");
     }
+
+    const session = await tx.activitySession.findUniqueOrThrow({ where: { id: sessionId } });
 
     const membership = await tx.groupMembership.findFirst({
       where: { groupId: session.groupId, userId, status: "ACTIVE" },

@@ -5,18 +5,8 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
-vi.mock("@/lib/current-user", () => ({
-  getCurrentUser: vi.fn(),
-}));
-
-vi.mock("@/modules/groups/group-queries", () => ({
-  getGroupPageData: vi.fn(),
-}));
-
-import GroupDetailPage from "@/app/groups/[slug]/page";
-import { getCurrentUser } from "@/lib/current-user";
+import { GroupDetail } from "@/app/groups/[slug]/group-detail";
 import type { GroupPageData } from "@/modules/groups/contracts";
-import { getGroupPageData } from "@/modules/groups/group-queries";
 
 const group: GroupPageData = {
   slug: "soder-sparks",
@@ -48,11 +38,8 @@ const group: GroupPageData = {
   },
 };
 
-it("renders server-provided group and next-training details", async () => {
-  vi.mocked(getCurrentUser).mockResolvedValue({ id: "member-a", name: "Member A", email: "member-a@example.test" });
-  vi.mocked(getGroupPageData).mockResolvedValue(group);
-
-  render(await GroupDetailPage({ params: Promise.resolve({ slug: "soder-sparks" }) }));
+it("renders an injected group and next-training details", () => {
+  render(<GroupDetail group={group} />);
 
   expect(screen.getByRole("heading", { name: "Söder Sparks" })).toBeInTheDocument();
   expect(screen.getByText("Stockholm · Södermalm")).toBeInTheDocument();
