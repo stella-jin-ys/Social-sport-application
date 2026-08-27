@@ -10,7 +10,7 @@ export type AuthFormProps = {
 };
 
 function localReturnPath(returnTo: string | null) {
-  return returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/";
+  return returnTo?.startsWith("/") && !returnTo.startsWith("//") && !returnTo.includes("\\") ? returnTo : "/";
 }
 
 export function AuthForm({ variant, onAuthenticated }: AuthFormProps) {
