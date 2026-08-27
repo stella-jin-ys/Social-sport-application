@@ -1,0 +1,8 @@
+.worktrees/
+.env
+.env.local
+node_modules/
+.next/
+test-results/
+playwright-report/
+src/generated/prisma/
