@@ -2,7 +2,7 @@
 
 ## Summary
 
-Replace the group detail demo's browser-only join and attendance state with authenticated PostgreSQL records. Public discovery remains available without an account. A signed-out visitor who chooses to join sees sign-in in a modal over the group page; signing in never joins the group automatically. After authentication, the person explicitly joins and can then respond to the next training.
+Replace the group detail demo's browser-only join and attendance state with authenticated PostgreSQL records. Public discovery remains available without an account. A signed-out visitor who presses **Join group** sees sign-in in a modal over the group page. Successful authentication from that pending join flow completes the membership automatically and unlocks attendance. Ordinary sign-in, failed authentication, and closing the modal do not create membership.
 
 This is a focused Phase 1 slice. It does not add chat, waiting lists, organizer dashboards, approval-only groups, or event management.
 
@@ -11,8 +11,11 @@ This is a focused Phase 1 slice. It does not add chat, waiting lists, organizer 
 - Public group profiles remain visible to signed-out visitors.
 - Clicking **Join group** while signed out opens a sign-in modal without leaving the group context.
 - The modal offers both sign-in and account creation.
-- Successful authentication closes the modal and returns to the same group page.
-- Authentication does not create a membership. The user must press **Join group** again to give explicit consent.
+- Pressing **Join group** records a pending join intent for that group before opening authentication.
+- Successful authentication from that modal consumes the pending intent, creates the membership, closes the modal, and returns to the same group page in the joined state.
+- Failed authentication does not create membership and keeps the modal open so the user can retry the same pending join.
+- Closing the modal, cancelling, or using browser Back clears the pending intent and does not create membership.
+- Signing in through the ordinary sign-in route does not create membership.
 - Public open groups join instantly. Organizer moderation happens after joining; moderation controls are outside this slice.
 - Only active members can respond to training attendance.
 - Membership and attendance survive reloads and work across devices for the same account.
@@ -25,11 +28,9 @@ This is a focused Phase 1 slice. It does not add chat, waiting lists, organizer 
 2. Press **Join group**.
 3. See the sign-in route rendered as a modal over the current group.
 4. Sign in or create an account.
-5. Return to the same group profile with **Join group** still available.
-6. Press **Join group** again.
-7. See the persistent joined state and unlocked attendance control.
+5. After successful authentication, return to the same group profile in the persistent joined state with the attendance control unlocked.
 
-Closing the modal or using browser Back returns to the unchanged group profile. A failed authentication attempt preserves the entered email and displays an inline error.
+Closing the modal or using browser Back clears the pending join intent and returns to the unchanged group profile. A failed authentication attempt preserves both the entered email and pending join intent, displays an inline error, and creates no membership. A later successful retry completes the join; closing the modal instead clears the intent and leaves the visitor unjoined.
 
 ### Signed-in non-member
 
@@ -50,7 +51,9 @@ The application remains a single Next.js App Router service backed by PostgreSQL
 - A focused client action component renders Join and attendance states and calls authenticated server actions.
 - `/sign-in` remains a full page for direct navigation.
 - A root parallel route intercepts `/sign-in` when navigation begins inside the app and renders the same form in an accessible modal.
-- The sign-in form accepts a validated same-origin `returnTo` path. After success, modal navigation returns to that path and refreshes its server data.
+- The Join control records a tab-scoped pending intent containing the group slug and same-origin return path, then navigates to the intercepted sign-in route. Arbitrary `join` query parameters are not treated as consent.
+- After successful modal authentication, the shared form submits the pending intent to an authenticated join action. When joining succeeds, it clears the intent, closes the modal, returns to the group, and refreshes server data.
+- Closing the modal clears its pending intent. The direct `/sign-in` page has no join intent and only signs the user in.
 
 The existing sign-in form is extracted into a reusable component so the full-page and modal routes share behavior and validation. The group page keeps the current visual design; only authenticated state, disabled states, progress feedback, and errors are added.
 
@@ -58,7 +61,7 @@ The existing sign-in form is extracted into a reusable component so the full-pag
 
 Route components do not contain membership rules. Focused services own the mutations:
 
-- `joinOpenGroup(userId, groupSlug)` finds a public open group and creates or returns its active membership in one idempotent operation.
+- `joinOpenGroup(userId, groupSlug)` finds a public open group and creates or returns its active membership in one idempotent operation. It is called after successful authentication only when the current tab holds a pending intent created by the Join control.
 - `setAttendance(userId, sessionId, status)` verifies active membership in the session's group and upserts that user's attendance response.
 
 Thin server actions obtain the authenticated user, validate input, call these services, and revalidate the affected group route. Authorization is always checked on the server; hiding a button is not treated as authorization.
@@ -89,12 +92,17 @@ Connects one user to one activity session with `GOING` or `NOT_GOING` and an upd
 
 Public reads query PostgreSQL directly. Authenticated page reads add membership and attendance only for the current user; they do not expose other members' private profile data.
 
+The pending join intent is local to the current browser tab and is never itself a membership. Failed authentication causes no database mutation and keeps the intent available for a retry while the modal remains open. Modal dismissal clears it without a database mutation. Successful authentication supplies the new session to the authenticated join action, which consumes the intent through one idempotent request.
+
 Joining runs in a transaction that creates or reactivates membership and updates the imported public member count only when the active-member state actually changes. Attendance uses a database upsert after membership authorization. Both mutations return canonical server state to the client, and the route is revalidated so a reload produces the same result.
 
 ## Error Handling
 
 - Missing or non-public groups return the existing friendly not-found experience.
-- A signed-out mutation returns an authentication-required result and opens the sign-in modal.
+- A signed-out Join click records pending intent and opens the sign-in modal without attempting a database mutation.
+- Failed authentication creates no membership and preserves pending intent only while the modal remains open for retry.
+- Modal dismissal clears pending intent without creating membership.
+- If authentication succeeds but joining fails, the user remains signed in but not joined; the group page shows a retryable join error.
 - A non-member attendance request returns a permission error without revealing member-only information.
 - Pending mutations disable only the affected control and use clear progress labels.
 - Database or network failures keep the page and user input intact, display an inline retry message, and restore the previous button state.
@@ -108,8 +116,10 @@ The modal has a labelled dialog, initial focus on its heading or first field, Es
 
 ### Unit and component tests
 
-- Signed-out Join requests the sign-in modal for the current group.
-- Successful authentication preserves the group route and does not mark the user as joined.
+- Signed-out Join records intent and requests the sign-in modal for the current group.
+- Successful modal authentication consumes intent, preserves the group route, and renders the persistent joined state.
+- Failed authentication creates no membership; a later successful retry in the still-open modal completes the pending join.
+- Modal dismissal and direct sign-in do not create membership.
 - Joined and attendance states render from server-provided state.
 - Pending, permission, and retry errors are understandable and accessible.
 
@@ -123,7 +133,7 @@ The modal has a labelled dialog, initial focus on its heading or first field, Es
 
 ### Browser verification
 
-On a clean local database, a visitor can discover a group, open it, invoke modal sign-in, return without automatic membership, join explicitly, set attendance, reload, and see both states preserved. The same journey is checked at a narrow mobile viewport, with keyboard operation, no accessibility violations in the changed flow, and a successful production build.
+On a clean local database, a visitor can discover a group, open it, press Join, authenticate in the modal, return already joined, set attendance, reload, and see both states preserved. Separate checks confirm that failed authentication and closing the modal leave the visitor unjoined. The same journey is checked at a narrow mobile viewport, with keyboard operation, no accessibility violations in the changed flow, and a successful production build.
 
 ## Deferred Work
 
