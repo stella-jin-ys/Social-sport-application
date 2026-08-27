@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions            Session[]
+  accounts            Account[]
+  groupMemberships    GroupMembership[]
+  attendanceResponses AttendanceResponse[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  issuer                String
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+enum ParticipationType {
+  WOMEN_ONLY
+  MIXED
+  OPEN
+}
+
+enum MembershipMode {
+  PUBLIC_OPEN
+  APPROVAL_ONLY
+  INVITE_ONLY
+}
+
+enum GroupRole {
+  ORGANIZER
+  MEMBER
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AttendanceStatus {
+  GOING
+  NOT_GOING
+}
+
+model Group {
+  id             String            @id @default(cuid())
+  slug           String            @unique
+  name           String
+  sport          String
+  sportSlug      String
+  location       String
+  timeLabel      String
+  participation  ParticipationType
+  membershipMode MembershipMode    @default(PUBLIC_OPEN)
+  memberCount    Int               @default(0)
+  recommended    Boolean           @default(false)
+  tone           String
+  accent         String
+  description    String
+  organizerName  String
+  schedule       String
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  memberships    GroupMembership[]
+  sessions       ActivitySession[]
+
+  @@index([sportSlug])
+  @@index([participation])
+}
+
+model GroupMembership {
+  id        String           @id @default(cuid())
+  groupId   String
+  userId    String
+  role      GroupRole        @default(MEMBER)
+  status    MembershipStatus @default(ACTIVE)
+  joinedAt  DateTime         @default(now())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  group     Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([userId, status])
+}
+
+model ActivitySession {
+  id         String               @id
+  groupId    String
+  title      String
+  startsAt   DateTime
+  endsAt     DateTime
+  venue      String
+  canceled   Boolean              @default(false)
+  goingCount Int                  @default(0)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  group      Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  attendance AttendanceResponse[]
+
+  @@index([groupId, startsAt])
+}
+
+model AttendanceResponse {
+  id        String           @id @default(cuid())
+  sessionId String
+  userId    String
+  status    AttendanceStatus
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  session   ActivitySession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, userId])
+  @@index([userId, status])
+}
