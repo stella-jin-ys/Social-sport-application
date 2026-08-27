@@ -24,7 +24,8 @@ describe("PWA manifest", () => {
     expect(appManifest.start_url).toBe("/");
     expect(appManifest.icons).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ src: "/icon.svg" }),
+        expect.objectContaining({ src: "/icon-192.svg", sizes: "192x192" }),
+        expect.objectContaining({ src: "/icon-512.svg", sizes: "512x512" }),
       ]),
     );
   });
