@@ -251,6 +251,12 @@
   box-shadow: 0 16px 35px rgba(41, 52, 58, 0.14);
 }
 
+@media (max-width: 40rem) {
+  .account-control__details {
+    right: -8.5rem;
+  }
+}
+
 .account-control__name,
 .account-control__email,
 .account-control__error {

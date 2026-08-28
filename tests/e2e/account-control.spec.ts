@@ -58,5 +58,9 @@ test("keeps the sign-up card within a narrow viewport and has no axe violations"
   await expect(accountDetails).toBeVisible();
   await expect(accountDetails).toContainText("Ada Runner");
   await expect(accountDetails).toContainText(email);
+  const detailsBox = await accountDetails.boundingBox();
+  expect(detailsBox).not.toBeNull();
+  expect(detailsBox!.x).toBeGreaterThanOrEqual(16);
+  expect(390 - (detailsBox!.x + detailsBox!.width)).toBeGreaterThanOrEqual(16);
   expect((await new AxeBuilder({ page }).include(".account-control").analyze()).violations).toEqual([]);
 });
