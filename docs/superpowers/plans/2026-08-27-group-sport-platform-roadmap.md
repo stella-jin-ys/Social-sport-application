@@ -6,7 +6,7 @@
 
 The approved specification contains discovery, scheduling, attendance, events, messaging, notifications, recommendations, and moderation. These are connected product capabilities but independently reviewable engineering subsystems. Building them as five vertical phases keeps every phase deployable and gives pilot users something coherent to validate before the next subsystem is added.
 
-Each phase receives its own detailed implementation plan. Phase 1 is specified in `docs/superpowers/plans/2026-08-27-core-coordination-vertical-slice.md`.
+Each phase receives its own detailed implementation plan. The original broad Phase 1 plan is archived because the completed persistent-membership slice superseded its immediate instructions; see `docs/superpowers/README.md` for the active plan.
 
 ## Open-source foundation decision
 
