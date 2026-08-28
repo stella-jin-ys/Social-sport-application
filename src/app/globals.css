@@ -1,5 +1,69 @@
 @import "tailwindcss";
 
+:root {
+  --paper: #fffdf8;
+  --surface: #ffffff;
+  --surface-muted: #fff1e7;
+  --ink: #29343a;
+  --muted: #56646a;
+  --line: #f0ded2;
+  --line-strong: #ad8675;
+  --accent: #f26a3d;
+  --accent-strong: #c34927;
+  --accent-foreground: #1f272b;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Avenir Next", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.font-display {
+  font-family: "SF Pro Rounded", "Avenir Next", ui-rounded, ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 .auth-page {
   display: grid;
   min-height: 100dvh;
@@ -252,8 +316,14 @@
 }
 
 @media (max-width: 40rem) {
+  .account-control {
+    position: static;
+  }
+
   .account-control__details {
-    right: -8.5rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 }
 

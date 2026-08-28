@@ -37,15 +37,19 @@ test("shows account details after sign-up and returns to Sign in after sign-out"
 });
 
 test("keeps the sign-up card within a narrow viewport and has no axe violations", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/sign-up");
+  for (const width of [320, 375, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/sign-up");
 
-  const card = page.locator(".auth-page__card");
-  const box = await card.boundingBox();
-  expect(box).not.toBeNull();
-  expect(box!.x).toBeGreaterThanOrEqual(16);
-  expect(390 - (box!.x + box!.width)).toBeGreaterThanOrEqual(16);
-  expect((await new AxeBuilder({ page }).include(".auth-page").analyze()).violations).toEqual([]);
+    const card = page.locator(".auth-page__card");
+    const box = await card.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.x).toBeGreaterThanOrEqual(16);
+    expect(width - (box!.x + box!.width)).toBeGreaterThanOrEqual(16);
+    expect((await new AxeBuilder({ page }).include(".auth-page").analyze()).violations).toEqual([]);
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
 
   const email = accountEmail(test.info().testId);
   await page.getByLabel(/name/i).fill("Ada Runner");
