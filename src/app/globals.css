@@ -1,5 +1,35 @@
 @import "tailwindcss";
 
+.auth-page {
+  display: grid;
+  min-height: 100dvh;
+  place-content: center;
+  justify-items: center;
+  gap: 1.25rem;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.auth-page__home {
+  color: var(--ink);
+  font-size: 1.75rem;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  text-decoration: none;
+}
+
+.auth-page__home span {
+  color: var(--accent);
+}
+
+.auth-page__card {
+  width: min(100%, 30rem);
+  padding: clamp(1.5rem, 5vw, 2.25rem);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 1.75rem;
+}
+
 .auth-modal {
   width: min(30rem, calc(100% - 2rem));
   max-height: calc(100dvh - 2rem);
