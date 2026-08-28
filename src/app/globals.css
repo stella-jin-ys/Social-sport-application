@@ -177,7 +177,9 @@
 }
 
 .auth-modal :is(button, input):focus-visible,
-.auth-modal__header h1:focus-visible {
+.auth-modal__header h1:focus-visible,
+.auth-page :is(button, input):focus-visible,
+.auth-page__home:focus-visible {
   outline: 3px solid var(--accent, #f26a3d);
   outline-offset: 3px;
 }
