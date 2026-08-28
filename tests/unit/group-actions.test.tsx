@@ -15,7 +15,7 @@ vi.mock("@/app/groups/[slug]/actions", () => ({
 
 import { GroupActions } from "@/app/groups/[slug]/group-actions";
 import { joinGroupAction, setAttendanceAction } from "@/app/groups/[slug]/actions";
-import { readPendingJoin, setJoinError } from "@/lib/pending-join";
+import { readPendingJoin, setPendingJoin } from "@/lib/pending-join";
 
 const baseProps = {
   groupSlug: "soder-sparks",
@@ -59,6 +59,27 @@ it("joins directly for an authenticated non-member", async () => {
   expect(screen.getByRole("button", { name: "Joined" })).toHaveAttribute("aria-pressed", "true");
 });
 
+it("restores join controls and shows a retryable alert when joining rejects", async () => {
+  const user = userEvent.setup();
+  vi.mocked(joinGroupAction).mockRejectedValue(new Error("network unavailable"));
+  render(<GroupActions {...baseProps} isAuthenticated isMember={false} />);
+
+  await user.click(screen.getByRole("button", { name: "Join group" }));
+
+  expect(await screen.findByRole("alert")).toHaveTextContent("We could not join this group. Please try again.");
+  expect(screen.getByRole("button", { name: "Join group" })).toBeEnabled();
+});
+
+it("handles a rejected automatic pending join without leaving controls pending", async () => {
+  setPendingJoin({ groupSlug: "soder-sparks", returnTo: "/groups/soder-sparks" });
+  vi.mocked(joinGroupAction).mockRejectedValue(new Error("server action rejected"));
+
+  render(<GroupActions {...baseProps} isAuthenticated isMember={false} />);
+
+  expect(await screen.findByRole("alert")).toHaveTextContent("We could not join this group. Please try again.");
+  expect(screen.getByRole("button", { name: "Join group" })).toBeEnabled();
+});
+
 it("lets an active member persist going and not-going states", async () => {
   const user = userEvent.setup();
   vi.mocked(setAttendanceAction)
@@ -72,6 +93,17 @@ it("lets an active member persist going and not-going states", async () => {
   expect(screen.getByRole("button", { name: "I'm coming" })).toHaveAttribute("aria-pressed", "false");
 });
 
+it("restores attendance controls and shows a retryable alert when saving rejects", async () => {
+  const user = userEvent.setup();
+  vi.mocked(setAttendanceAction).mockRejectedValue(new Error("network unavailable"));
+  render(<GroupActions {...baseProps} isAuthenticated isMember scope="attendance" />);
+
+  await user.click(screen.getByRole("button", { name: "I'm coming" }));
+
+  expect(await screen.findByRole("alert")).toHaveTextContent("We could not save your response. Please try again.");
+  expect(screen.getByRole("button", { name: "I'm coming" })).toBeEnabled();
+});
+
 it("locks attendance until the visitor joins the group", async () => {
   const user = userEvent.setup();
   render(<GroupActions {...baseProps} isAuthenticated isMember={false} />);
@@ -80,16 +112,4 @@ it("locks attendance until the visitor joins the group", async () => {
   await user.click(screen.getByRole("button", { name: "I'm coming" }));
 
   expect(setAttendanceAction).not.toHaveBeenCalled();
-});
-
-it("displays a consumed pending-join error once", () => {
-  setJoinError("We could not join this group. Please try again.");
-  const firstRender = render(<GroupActions {...baseProps} isAuthenticated isMember={false} />);
-
-  expect(screen.getByRole("alert")).toHaveTextContent("We could not join this group. Please try again.");
-
-  firstRender.unmount();
-  render(<GroupActions {...baseProps} isAuthenticated isMember={false} />);
-
-  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 });

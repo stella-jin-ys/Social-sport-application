@@ -1,7 +1,6 @@
 export type PendingJoin = { groupSlug: string; returnTo: string };
 
 const intentKey = "huddle:pending-join";
-const errorKey = "huddle:join-error";
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function validate(intent: PendingJoin) {
@@ -32,14 +31,4 @@ export function readPendingJoin(): PendingJoin | null {
 
 export function clearPendingJoin() {
   window.sessionStorage.removeItem(intentKey);
-}
-
-export function setJoinError(message: string) {
-  window.sessionStorage.setItem(errorKey, message);
-}
-
-export function takeJoinError() {
-  const message = window.sessionStorage.getItem(errorKey);
-  window.sessionStorage.removeItem(errorKey);
-  return message;
 }

@@ -1,11 +1,24 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { resetDomainData } from "../integration/database";
+import { prisma, resetDomainData } from "../integration/database";
 import { seedGroups } from "@/modules/groups/seed-groups";
 
 test.beforeEach(async () => {
   await resetDomainData();
   await seedGroups();
+});
+
+test("a request after an attendance mutation receives fresh Discover data", async ({ request }) => {
+  const beforeMutation = await request.get("/discover");
+  expect(await beforeMutation.text()).toContain("12 going");
+
+  await prisma.activitySession.update({
+    where: { id: "session-soder-sparks-next" },
+    data: { goingCount: 13 },
+  });
+
+  const afterMutation = await request.get("/discover");
+  expect(await afterMutation.text()).toContain("13 going");
 });
 
 test("joining while signed in enables attendance without a reload", async ({ page }) => {
@@ -32,7 +45,7 @@ test("creates an account, completes the pending join, and persists attendance", 
 
   const dialog = page.getByRole("dialog", { name: /join group/i });
   await expect(dialog).toBeVisible();
-  await page.locator("dialog > button").last().click();
+  await dialog.getByRole("button", { name: "Create an account" }).click();
   await dialog.getByLabel(/name/i).fill("Test Member");
   await dialog.getByLabel(/email/i).fill(email);
   await dialog.getByLabel(/password/i).fill("long-enough-password");
@@ -125,10 +138,7 @@ test("narrow viewport keeps join keyboard accessible", async ({ page }) => {
   await page.keyboard.press("Enter");
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
-  await expect.poll(() => page.evaluate(() => {
-    const active = document.activeElement;
-    return active instanceof HTMLElement && document.querySelector("dialog")?.contains(active);
-  })).toBe(true);
+  await expect(dialog.getByRole("heading", { name: "Join group" })).toBeFocused();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 
   await page.keyboard.press("Escape");

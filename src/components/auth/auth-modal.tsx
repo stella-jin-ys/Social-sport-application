@@ -8,6 +8,7 @@ import { clearPendingJoin, readPendingJoin } from "@/lib/pending-join";
 export function AuthModal() {
   const [variant, setVariant] = useState<"sign-in" | "sign-up">("sign-in");
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const preservesPendingJoin = useRef(false);
   const pendingCleanup = useRef<number | null>(null);
   const router = useRouter();
@@ -39,6 +40,7 @@ export function AuthModal() {
       pendingCleanup.current = null;
     }
     dialogRef.current?.showModal();
+    headingRef.current?.focus();
 
     return () => {
       if (!preservesPendingJoin.current) {
@@ -48,16 +50,22 @@ export function AuthModal() {
   }, []);
 
   return (
-    <dialog aria-labelledby="auth-modal-title" onCancel={(event) => {
+    <dialog aria-labelledby="auth-modal-title" className="auth-modal" onCancel={(event) => {
       event.preventDefault();
       closeModal();
     }} ref={dialogRef}>
-      <h1 id="auth-modal-title">Join group</h1>
-      <button aria-label="Close" onClick={closeModal} type="button">Close</button>
+      <div className="auth-modal__header">
+        <h1 className="font-display" id="auth-modal-title" ref={headingRef} tabIndex={-1}>Join group</h1>
+        <button aria-label="Close" className="auth-modal__close" onClick={closeModal} type="button">Close</button>
+      </div>
+      <p className="auth-modal__intro">Sign in to join this group and respond to upcoming sessions.</p>
       <AuthForm onAuthenticated={completePendingJoin} variant={variant} />
-      <button onClick={() => setVariant((current) => current === "sign-in" ? "sign-up" : "sign-in")} type="button">
-        {variant === "sign-in" ? "Create an account" : "Sign in instead"}
-      </button>
+      <div className="auth-modal__switch">
+        <span>{variant === "sign-in" ? "New to Huddle?" : "Already have an account?"}</span>
+        <button onClick={() => setVariant((current) => current === "sign-in" ? "sign-up" : "sign-in")} type="button">
+          {variant === "sign-in" ? "Create an account" : "Sign in instead"}
+        </button>
+      </div>
     </dialog>
   );
 }

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { joinGroupAction, setAttendanceAction } from "./actions";
-import { clearPendingJoin, readPendingJoin, setPendingJoin, takeJoinError } from "@/lib/pending-join";
+import { clearPendingJoin, readPendingJoin, setPendingJoin } from "@/lib/pending-join";
 import type { AttendanceChoice, GroupPageData } from "@/modules/groups/contracts";
 
 type GroupActionsProps = {
@@ -33,24 +33,29 @@ export function GroupActions({
   const [currentAttendance, setCurrentAttendance] = useState(attendanceStatus);
   const [goingCount, setGoingCount] = useState(nextTraining?.goingCount ?? 0);
   const [pendingControl, setPendingControl] = useState<"join" | "attendance" | null>(null);
-  const [error, setError] = useState<string | null>(() => typeof window === "undefined" ? null : takeJoinError());
+  const [error, setError] = useState<string | null>(null);
   const member = isMember || joined;
   const coming = currentAttendance === "GOING";
 
   const persistJoin = useCallback(async () => {
     setError(null);
     setPendingControl("join");
-    const result = await joinGroupAction(groupSlug);
-    setPendingControl(null);
+    try {
+      const result = await joinGroupAction(groupSlug);
 
-    if (result.ok) {
-      setJoined(true);
-      setCurrentMemberCount(result.memberCount);
-      router.refresh();
-      return;
+      if (result.ok) {
+        setJoined(true);
+        setCurrentMemberCount(result.memberCount);
+        router.refresh();
+        return;
+      }
+
+      setError(result.message);
+    } catch {
+      setError("We could not join this group. Please try again.");
+    } finally {
+      setPendingControl(null);
     }
-
-    setError(result.message);
   }, [groupSlug, router]);
 
   useEffect(() => {
@@ -80,16 +85,21 @@ export function GroupActions({
 
     setError(null);
     setPendingControl("attendance");
-    const result = await setAttendanceAction(nextTraining.id, coming ? "NOT_GOING" : "GOING");
-    setPendingControl(null);
+    try {
+      const result = await setAttendanceAction(nextTraining.id, coming ? "NOT_GOING" : "GOING");
 
-    if (result.ok) {
-      setCurrentAttendance(result.status);
-      setGoingCount(result.goingCount);
-      return;
+      if (result.ok) {
+        setCurrentAttendance(result.status);
+        setGoingCount(result.goingCount);
+        return;
+      }
+
+      setError(result.message);
+    } catch {
+      setError("We could not save your response. Please try again.");
+    } finally {
+      setPendingControl(null);
     }
-
-    setError(result.message);
   }
 
   const membershipControls = (

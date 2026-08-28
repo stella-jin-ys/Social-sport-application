@@ -59,6 +59,12 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
+it("focuses the modal heading when the dialog opens", async () => {
+  render(<AuthModal />);
+
+  expect(await screen.findByRole("heading", { name: "Join group" })).toHaveFocus();
+});
+
 it("returns to the pending group only after successful authentication", async () => {
   setPendingJoin({ groupSlug: "soder-sparks", returnTo: "/groups/soder-sparks" });
   vi.mocked(authClient.signIn.email).mockResolvedValue({ data: {}, error: null } as never);

@@ -27,44 +27,52 @@ export function AuthForm({ variant, onAuthenticated }: AuthFormProps) {
     event.preventDefault();
     setError("");
     setIsPending(true);
+    const retryMessage = isSignUp
+      ? "Unable to create your account. Please try again."
+      : "Unable to sign in. Please try again.";
 
-    const result = isSignUp
-      ? await authClient.signUp.email({ name, email, password })
-      : await authClient.signIn.email({ email, password });
+    try {
+      const result = isSignUp
+        ? await authClient.signUp.email({ name, email, password })
+        : await authClient.signIn.email({ email, password });
 
-    if (result.error) {
-      setError(result.error.message ?? (isSignUp ? "Unable to create your account." : "Unable to sign in."));
+      if (result.error) {
+        setError(result.error.message ?? retryMessage);
+        return;
+      }
+
+      if (onAuthenticated) {
+        await onAuthenticated();
+        return;
+      }
+
+      router.push(localReturnPath(searchParams.get("returnTo")));
+    } catch {
+      setError(retryMessage);
+    } finally {
       setIsPending(false);
-      return;
     }
-
-    if (onAuthenticated) {
-      await onAuthenticated();
-      return;
-    }
-
-    router.push(localReturnPath(searchParams.get("returnTo")));
   }
 
   return (
-    <section>
-      <h1>{isSignUp ? "Create an account" : "Sign in"}</h1>
-      <form onSubmit={handleSubmit}>
+    <section className="auth-form">
+      <h1 className="auth-form__title">{isSignUp ? "Create an account" : "Sign in"}</h1>
+      <form className="auth-form__fields" onSubmit={handleSubmit}>
         {isSignUp ? (
           <label>
-            Name
+            <span>Name</span>
             <input name="name" onChange={(event) => setName(event.target.value)} required value={name} />
           </label>
         ) : null}
         <label>
-          Email
+          <span>Email</span>
           <input name="email" onChange={(event) => setEmail(event.target.value)} required type="email" value={email} />
         </label>
         <label>
-          Password
+          <span>Password</span>
           <input name="password" minLength={8} onChange={(event) => setPassword(event.target.value)} required type="password" value={password} />
         </label>
-        {error ? <p role="alert">{error}</p> : null}
+        {error ? <p className="auth-form__error" role="alert">{error}</p> : null}
         <button disabled={isPending} type="submit">{isPending ? "Please wait…" : isSignUp ? "Sign up" : "Sign in"}</button>
       </form>
     </section>
