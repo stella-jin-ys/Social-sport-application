@@ -1,5 +1,6 @@
+import { Suspense } from "react";
 import { AuthForm } from "@/components/auth/auth-form";
 
 export default function SignUpPage() {
-  return <AuthForm variant="sign-up" />;
+  return <Suspense fallback={null}><AuthForm variant="sign-up" /></Suspense>;
 }

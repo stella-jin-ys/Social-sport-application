@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { joinGroupAction } from "@/app/groups/[slug]/actions";
 import { AuthForm } from "@/components/auth/auth-form";
-import { clearPendingJoin, readPendingJoin, setJoinError } from "@/lib/pending-join";
+import { clearPendingJoin, readPendingJoin } from "@/lib/pending-join";
 
 export function AuthModal() {
   const [variant, setVariant] = useState<"sign-in" | "sign-up">("sign-in");
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const preservesPendingJoin = useRef(false);
+  const pendingCleanup = useRef<number | null>(null);
   const router = useRouter();
 
   function closeModal() {
@@ -27,18 +28,23 @@ export function AuthModal() {
       return;
     }
 
-    const result = await joinGroupAction(intent.groupSlug);
-    clearPendingJoin();
-    if (!result.ok) setJoinError(result.message);
+    preservesPendingJoin.current = true;
     dialogRef.current?.close();
-    router.back();
-    router.refresh();
+    window.location.replace(intent.returnTo);
   }
 
   useEffect(() => {
+    if (pendingCleanup.current !== null) {
+      window.clearTimeout(pendingCleanup.current);
+      pendingCleanup.current = null;
+    }
     dialogRef.current?.showModal();
 
-    return () => clearPendingJoin();
+    return () => {
+      if (!preservesPendingJoin.current) {
+        pendingCleanup.current = window.setTimeout(clearPendingJoin);
+      }
+    };
   }, []);
 
   return (

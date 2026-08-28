@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { joinGroupAction, setAttendanceAction } from "./actions";
-import { setPendingJoin, takeJoinError } from "@/lib/pending-join";
+import { clearPendingJoin, readPendingJoin, setPendingJoin, takeJoinError } from "@/lib/pending-join";
 import type { AttendanceChoice, GroupPageData } from "@/modules/groups/contracts";
 
 type GroupActionsProps = {
@@ -28,13 +28,40 @@ export function GroupActions({
   scope = "all",
 }: GroupActionsProps) {
   const router = useRouter();
-  const [member, setMember] = useState(isMember);
+  const [joined, setJoined] = useState(false);
   const [currentMemberCount, setCurrentMemberCount] = useState(memberCount);
   const [currentAttendance, setCurrentAttendance] = useState(attendanceStatus);
   const [goingCount, setGoingCount] = useState(nextTraining?.goingCount ?? 0);
   const [pendingControl, setPendingControl] = useState<"join" | "attendance" | null>(null);
-  const [error, setError] = useState(() => takeJoinError());
+  const [error, setError] = useState<string | null>(() => typeof window === "undefined" ? null : takeJoinError());
+  const member = isMember || joined;
   const coming = currentAttendance === "GOING";
+
+  const persistJoin = useCallback(async () => {
+    setError(null);
+    setPendingControl("join");
+    const result = await joinGroupAction(groupSlug);
+    setPendingControl(null);
+
+    if (result.ok) {
+      setJoined(true);
+      setCurrentMemberCount(result.memberCount);
+      router.refresh();
+      return;
+    }
+
+    setError(result.message);
+  }, [groupSlug, router]);
+
+  useEffect(() => {
+    if (!isAuthenticated || scope === "attendance") return;
+
+    const intent = readPendingJoin();
+    if (!intent || intent.groupSlug !== groupSlug) return;
+
+    clearPendingJoin();
+    queueMicrotask(() => void persistJoin());
+  }, [groupSlug, isAuthenticated, persistJoin, scope]);
 
   async function joinGroup() {
     setError(null);
@@ -45,18 +72,7 @@ export function GroupActions({
       return;
     }
 
-    setPendingControl("join");
-    const result = await joinGroupAction(groupSlug);
-    setPendingControl(null);
-
-    if (result.ok) {
-      setMember(true);
-      setCurrentMemberCount(result.memberCount);
-      router.refresh();
-      return;
-    }
-
-    setError(result.message);
+    await persistJoin();
   }
 
   async function updateAttendance() {

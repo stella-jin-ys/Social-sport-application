@@ -1,13 +1,14 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { StrictMode } from "react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { authClient } from "@/lib/auth-client";
 import { clearPendingJoin, readPendingJoin, setPendingJoin } from "@/lib/pending-join";
-import { joinGroupAction } from "@/app/groups/[slug]/actions";
 
 const router = { back: vi.fn(), push: vi.fn(), refresh: vi.fn() };
 let user: ReturnType<typeof userEvent.setup>;
+let replaceLocation: ReturnType<typeof vi.fn>;
 
 vi.mock("next/navigation", () => ({
   useRouter: () => router,
@@ -16,13 +17,10 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/lib/auth-client", () => ({
   authClient: {
+    getSession: vi.fn(),
     signIn: { email: vi.fn() },
     signUp: { email: vi.fn() },
   },
-}));
-
-vi.mock("@/app/groups/[slug]/actions", () => ({
-  joinGroupAction: vi.fn(),
 }));
 
 async function submitCredentials() {
@@ -42,9 +40,10 @@ beforeEach(() => {
   router.back.mockReset();
   router.push.mockReset();
   router.refresh.mockReset();
+  replaceLocation = vi.fn();
+  vi.stubGlobal("location", { replace: replaceLocation });
   vi.mocked(authClient.signIn.email).mockReset();
   vi.mocked(authClient.signUp.email).mockReset();
-  vi.mocked(joinGroupAction).mockReset();
   HTMLDialogElement.prototype.showModal = vi.fn(function showModal(this: HTMLDialogElement) {
     this.open = true;
   });
@@ -53,19 +52,31 @@ beforeEach(() => {
   });
 });
 
-afterEach(() => clearPendingJoin());
+afterEach(async () => {
+  cleanup();
+  clearPendingJoin();
+  await new Promise((resolve) => window.setTimeout(resolve));
+  vi.unstubAllGlobals();
+});
 
-it("completes the pending join only after successful authentication", async () => {
+it("returns to the pending group only after successful authentication", async () => {
   setPendingJoin({ groupSlug: "soder-sparks", returnTo: "/groups/soder-sparks" });
   vi.mocked(authClient.signIn.email).mockResolvedValue({ data: {}, error: null } as never);
-  vi.mocked(joinGroupAction).mockResolvedValue({ ok: true, memberCount: 43 });
 
   render(<AuthModal />);
   await submitCredentials();
 
-  await waitFor(() => expect(joinGroupAction).toHaveBeenCalledWith("soder-sparks"));
-  expect(readPendingJoin()).toBeNull();
-  expect(router.back).toHaveBeenCalled();
+  await waitFor(() => expect(replaceLocation).toHaveBeenCalledWith("/groups/soder-sparks"));
+  expect(readPendingJoin()).not.toBeNull();
+});
+
+it("preserves pending join intent during a transient modal remount", async () => {
+  setPendingJoin({ groupSlug: "soder-sparks", returnTo: "/groups/soder-sparks" });
+
+  render(<StrictMode><AuthModal /></StrictMode>);
+
+  await new Promise((resolve) => window.setTimeout(resolve));
+  expect(readPendingJoin()).not.toBeNull();
 });
 
 it("keeps intent after failed authentication and clears it on close", async () => {
@@ -79,7 +90,6 @@ it("keeps intent after failed authentication and clears it on close", async () =
   await submitCredentials();
 
   await screen.findByRole("alert");
-  expect(joinGroupAction).not.toHaveBeenCalled();
   expect(readPendingJoin()).not.toBeNull();
 
   await user.click(screen.getByRole("button", { name: /close/i }));
@@ -91,13 +101,11 @@ it("completes the same pending join after a successful retry", async () => {
   vi.mocked(authClient.signIn.email)
     .mockResolvedValueOnce({ data: null, error: { message: "Invalid credentials" } } as never)
     .mockResolvedValueOnce({ data: {}, error: null } as never);
-  vi.mocked(joinGroupAction).mockResolvedValue({ ok: true, memberCount: 43 });
 
   render(<AuthModal />);
   await submitCredentials();
   await screen.findByRole("alert");
-  expect(joinGroupAction).not.toHaveBeenCalled();
   await submitCredentials();
 
-  await waitFor(() => expect(joinGroupAction).toHaveBeenCalledWith("soder-sparks"));
+  await waitFor(() => expect(replaceLocation).toHaveBeenCalledWith("/groups/soder-sparks"));
 });
