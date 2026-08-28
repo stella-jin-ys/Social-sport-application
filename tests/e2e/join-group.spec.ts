@@ -87,6 +87,34 @@ test("closing authentication leaves the visitor unjoined", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Join group" })).toBeVisible();
 });
 
+test("browser Back clears join intent before direct sign-in", async ({ page }) => {
+  const email = `back-member-${Date.now()}@example.test`;
+  await page.goto("/sign-up");
+  await page.getByLabel(/name/i).fill("Back Member");
+  await page.getByLabel(/email/i).fill(email);
+  await page.getByLabel(/password/i).fill("long-enough-password");
+  await page.getByRole("button", { name: "Sign up" }).click();
+  await page.waitForURL(/\/$/);
+  await page.context().clearCookies();
+
+  await page.goto("/groups/soder-sparks");
+  await page.getByRole("button", { name: "Join group" }).click();
+  await expect(page.getByRole("dialog", { name: /join group/i })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole("button", { name: "Join group" })).toBeVisible();
+
+  await page.goto("/sign-in");
+  await page.getByLabel(/email/i).fill(email);
+  await page.getByLabel(/password/i).fill("long-enough-password");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.waitForURL(/\/$/);
+
+  await page.goto("/groups/soder-sparks");
+  await expect(page.getByRole("button", { name: "Join group" })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Join group" })).toBeVisible();
+});
+
 test("narrow viewport keeps join keyboard accessible", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/groups/soder-sparks");
