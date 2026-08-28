@@ -189,3 +189,113 @@
     padding: 2rem;
   }
 }
+
+.account-control {
+  position: relative;
+}
+
+.account-control__avatar,
+.account-control__skeleton {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.account-control__avatar {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--accent-foreground);
+  background: var(--accent);
+  border: 0;
+  border-radius: 50%;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.account-control__skeleton {
+  display: inline-block;
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+.account-control__sign-in,
+.account-control__sign-out {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.account-control__sign-in {
+  padding: 0.5rem 0.75rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.account-control__details {
+  position: absolute;
+  right: 0;
+  z-index: 10;
+  width: min(20rem, calc(100vw - 2rem));
+  margin-top: 0.5rem;
+  padding: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 1rem;
+  box-shadow: 0 16px 35px rgba(41, 52, 58, 0.14);
+}
+
+.account-control__name,
+.account-control__email,
+.account-control__error {
+  overflow-wrap: anywhere;
+}
+
+.account-control__name {
+  margin: 0;
+  font-weight: 900;
+}
+
+.account-control__email {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.account-control__error {
+  margin: 1rem 0 0;
+  padding: 0.75rem;
+  background: var(--surface-muted);
+  border: 1px solid var(--accent-strong);
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.account-control__sign-out {
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  color: var(--accent-foreground);
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.account-control__sign-out:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.account-control :is(button, a):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
