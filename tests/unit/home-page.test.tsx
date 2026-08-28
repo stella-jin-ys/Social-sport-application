@@ -1,6 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import manifest from "@/app/manifest";
 import HomePage from "@/app/page";
+import { vi } from "vitest";
+
+vi.mock("@/components/account-control", () => ({
+  AccountControl: () => <div data-testid="account-control">Account control</div>,
+}));
 
 describe("HomePage", () => {
   it("explains the core product action", () => {
@@ -12,6 +17,7 @@ describe("HomePage", () => {
       "href",
       "/discover",
     );
+    expect(within(screen.getByRole("navigation")).getByTestId("account-control")).toBeInTheDocument();
   });
 });
 

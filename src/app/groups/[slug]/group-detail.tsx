@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountControl } from "@/components/account-control";
 import { GroupActions } from "./group-actions";
 import type { GroupPageData } from "@/modules/groups/contracts";
 
@@ -11,6 +12,7 @@ export function GroupDetail({ group }: { group: GroupPageData }) {
         </Link>
         <div className="flex items-center gap-3 text-sm font-bold">
           <Link className="hidden px-3 py-2 text-[var(--muted)] transition-colors hover:text-[var(--ink)] sm:block" href="/discover">Discover</Link>
+          <AccountControl />
           <Link className="rounded-full bg-[var(--accent)] px-4 py-2.5 text-[var(--accent-foreground)] transition-transform hover:-translate-y-0.5" href="/sign-up">Start a group</Link>
         </div>
       </nav>

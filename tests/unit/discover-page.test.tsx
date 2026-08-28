@@ -1,10 +1,14 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { DiscoverClient } from "@/app/discover/discover-client";
 import type { PublicGroupCard } from "@/modules/groups/contracts";
 import { vi } from "vitest";
 
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
+}));
+
+vi.mock("@/components/account-control", () => ({
+  AccountControl: () => <div data-testid="account-control">Account control</div>,
 }));
 
 const groupFixtures: PublicGroupCard[] = [
@@ -59,6 +63,7 @@ describe("DiscoverClient", () => {
     expect(screen.getByRole("button", { name: /women only/i })).toBeInTheDocument();
     expect(screen.getByText(/recommended groups/i)).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /view group/i })[0]).toHaveAttribute("href", "/groups/soder-sparks");
+    expect(within(screen.getByRole("navigation")).getByTestId("account-control")).toBeInTheDocument();
   });
 
   it("filters groups by sport and location", () => {

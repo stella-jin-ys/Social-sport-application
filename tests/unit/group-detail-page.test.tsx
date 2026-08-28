@@ -1,8 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { vi } from "vitest";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+}));
+
+vi.mock("@/components/account-control", () => ({
+  AccountControl: () => <div data-testid="account-control">Account control</div>,
 }));
 
 import { GroupDetail } from "@/app/groups/[slug]/group-detail";
@@ -45,4 +49,5 @@ it("renders an injected group and next-training details", () => {
   expect(screen.getByText("Stockholm · Södermalm")).toBeInTheDocument();
   expect(screen.getByText(/organized by lina berg/i)).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /next training/i })).toBeInTheDocument();
+  expect(within(screen.getByRole("navigation")).getByTestId("account-control")).toBeInTheDocument();
 });

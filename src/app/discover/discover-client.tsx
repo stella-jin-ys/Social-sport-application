@@ -5,6 +5,7 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { sports } from "@/lib/group-catalog";
 import type { PublicGroupCard } from "@/modules/groups/contracts";
+import { AccountControl } from "@/components/account-control";
 
 const audienceFilters = [
   { label: "Everyone", value: "all" },
@@ -39,7 +40,7 @@ function DiscoverContent({ groups }: { groups: PublicGroupCard[] }) {
           <Link className="transition-colors hover:text-[var(--ink)]" href="/#for-organizers">For organizers</Link>
         </div>
         <div className="flex items-center gap-3 text-sm font-bold">
-          <Link className="hidden px-3 py-2 text-[var(--muted)] transition-colors hover:text-[var(--ink)] sm:block" href="/sign-in">Sign in</Link>
+          <AccountControl />
           <Link className="rounded-full bg-[var(--accent)] px-4 py-2.5 text-[var(--accent-foreground)] transition-transform hover:-translate-y-0.5" href="/sign-up">Start a group</Link>
         </div>
       </nav>
