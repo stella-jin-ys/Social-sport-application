@@ -1,15 +1,23 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { resetDomainData } from "../integration/database";
+import { prisma, resetDomainData } from "../integration/database";
 import { seedGroups } from "@/modules/groups/seed-groups";
+
+function accountEmail(testId: string) {
+  return `account-control-${testId.replace(/[^a-z0-9]/gi, "")}@example.test`;
+}
 
 test.beforeEach(async () => {
   await resetDomainData();
   await seedGroups();
 });
 
+test.afterEach(async ({}, testInfo) => {
+  await prisma.user.deleteMany({ where: { email: accountEmail(testInfo.testId) } });
+});
+
 test("shows account details after sign-up and returns to Sign in after sign-out", async ({ page }) => {
-  const email = `account-control-${Date.now()}@example.test`;
+  const email = accountEmail(test.info().testId);
   await page.goto("/sign-up");
 
   const card = page.locator(".auth-page__card");
@@ -39,12 +47,16 @@ test("keeps the sign-up card within a narrow viewport and has no axe violations"
   expect(390 - (box!.x + box!.width)).toBeGreaterThanOrEqual(16);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 
-  const email = `account-control-narrow-${Date.now()}@example.test`;
+  const email = accountEmail(test.info().testId);
   await page.getByLabel(/name/i).fill("Ada Runner");
   await page.getByLabel(/email/i).fill(email);
   await page.getByLabel(/password/i).fill("long-enough-password");
   await page.getByRole("button", { name: "Sign up" }).click();
   await page.waitForURL(/\/$/);
   await page.getByRole("button", { name: /open account menu/i }).click();
+  const accountDetails = page.getByLabel("Account details");
+  await expect(accountDetails).toBeVisible();
+  await expect(accountDetails).toContainText("Ada Runner");
+  await expect(accountDetails).toContainText(email);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
