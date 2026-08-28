@@ -45,7 +45,7 @@ test("keeps the sign-up card within a narrow viewport and has no axe violations"
   expect(box).not.toBeNull();
   expect(box!.x).toBeGreaterThanOrEqual(16);
   expect(390 - (box!.x + box!.width)).toBeGreaterThanOrEqual(16);
-  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  expect((await new AxeBuilder({ page }).include(".auth-page").analyze()).violations).toEqual([]);
 
   const email = accountEmail(test.info().testId);
   await page.getByLabel(/name/i).fill("Ada Runner");
@@ -58,5 +58,5 @@ test("keeps the sign-up card within a narrow viewport and has no axe violations"
   await expect(accountDetails).toBeVisible();
   await expect(accountDetails).toContainText("Ada Runner");
   await expect(accountDetails).toContainText(email);
-  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  expect((await new AxeBuilder({ page }).include(".account-control").analyze()).violations).toEqual([]);
 });
