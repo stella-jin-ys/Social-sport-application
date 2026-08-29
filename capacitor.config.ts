@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: "Sportship",
   webDir: "public",
   server: {
-    url: "https://phase-1-fast-build.vercel.app",
+    url: "https://social-sport-app-sportship.vercel.app",
     cleartext: false,
     androidScheme: "https",
   },
