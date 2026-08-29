@@ -8,6 +8,7 @@ type GroupWithNextSession = Prisma.GroupGetPayload<{
 
 const audienceLabels = {
   WOMEN_ONLY: "Women only",
+  MEN_ONLY: "Men only",
   MIXED: "Mixed group",
   OPEN: "Open to all",
 } as const;
@@ -36,6 +37,7 @@ function toCard(group: GroupWithNextSession): PublicGroupCard {
     sportSlug: group.sportSlug,
     location: group.location,
     time: group.timeLabel,
+    schedule: group.schedule,
     audience: audienceLabels[group.participation],
     members: `${next?.goingCount ?? 0} going`,
     recommended: group.recommended,

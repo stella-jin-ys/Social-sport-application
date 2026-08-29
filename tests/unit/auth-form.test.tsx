@@ -4,6 +4,15 @@ import { beforeEach, expect, it, vi } from "vitest";
 import { AuthForm } from "@/components/auth/auth-form";
 import { authClient } from "@/lib/auth-client";
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+
+  return { promise, resolve };
+}
+
 const router = { push: vi.fn() };
 let searchParams = new URLSearchParams();
 
@@ -63,4 +72,30 @@ it("restores sign-up submission and shows a retryable alert when authentication 
 
   expect(await screen.findByRole("alert")).toHaveTextContent("Unable to create your account. Please try again.");
   expect(screen.getByRole("button", { name: /^sign up$/i })).toBeEnabled();
+});
+
+it.each([
+  { variant: "sign-in" as const, label: "Signing in", button: "Sign in" },
+  { variant: "sign-up" as const, label: "Creating account", button: "Sign up" },
+])("shows an accessible indeterminate state while $variant is pending", async ({ variant, label, button }) => {
+  const pendingAuth = deferred<{ data: object; error: null }>();
+  const method = variant === "sign-up" ? authClient.signUp.email : authClient.signIn.email;
+  vi.mocked(method).mockReturnValue(pendingAuth.promise as never);
+  const user = userEvent.setup();
+
+  render(<AuthForm variant={variant} />);
+  if (variant === "sign-up") {
+    await user.type(screen.getByLabelText(/name/i), "Test Member");
+  }
+  await user.type(screen.getByLabelText(/email/i), "member@example.test");
+  await user.type(screen.getByLabelText(/password/i), "long-enough");
+  await user.click(screen.getByRole("button", { name: button }));
+
+  expect(screen.getByRole("form")).toHaveAttribute("aria-busy", "true");
+  expect(screen.getByRole("progressbar", { name: label })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: button })).toBeDisabled();
+  expect(screen.getByRole("progressbar", { name: label })).not.toHaveAttribute("aria-valuenow");
+
+  pendingAuth.resolve({ data: {}, error: null });
+  await waitFor(() => expect(screen.queryByRole("progressbar", { name: label })).not.toBeInTheDocument());
 });

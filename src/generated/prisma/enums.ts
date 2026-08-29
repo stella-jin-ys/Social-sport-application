@@ -11,6 +11,7 @@
 
 export const ParticipationType = {
   WOMEN_ONLY: 'WOMEN_ONLY',
+  MEN_ONLY: 'MEN_ONLY',
   MIXED: 'MIXED',
   OPEN: 'OPEN'
 } as const

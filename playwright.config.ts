@@ -9,12 +9,13 @@ export default defineConfig({
   },
   projects: [{ name: "chromium", use: { browserName: "chromium" } }],
   webServer: {
-    command: "pnpm dev --port 3101",
+    command: `"${process.execPath}" node_modules/next/dist/bin/next dev --webpack --port 3101`,
     url: "http://127.0.0.1:3101",
     reuseExistingServer: false,
     env: {
       ...process.env,
-      BETTER_AUTH_URL: "http://127.0.0.1:3101",
+      BETTER_AUTH_URL: "http://localhost:3101",
+      BETTER_AUTH_TRUSTED_ORIGINS: "http://localhost:3101,http://127.0.0.1:3101",
     },
   },
 });

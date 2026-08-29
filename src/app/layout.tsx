@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Group Sport",
+  title: "Sportship",
   description: "Find your next sports group.",
   manifest: "/manifest.webmanifest",
 };

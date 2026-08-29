@@ -19,6 +19,7 @@ const groupFixtures: PublicGroupCard[] = [
     sportSlug: "innebandy",
     location: "Stockholm · Södermalm",
     time: "Tue 18:30",
+    schedule: "Every Tuesday evening",
     audience: "Women only",
     members: "12 going",
     recommended: true,
@@ -32,6 +33,7 @@ const groupFixtures: PublicGroupCard[] = [
     sportSlug: "football",
     location: "Stockholm · Vasastan",
     time: "Wed 19:00",
+    schedule: "Every Wednesday evening",
     audience: "Mixed group",
     members: "8 going",
     recommended: true,
@@ -45,11 +47,26 @@ const groupFixtures: PublicGroupCard[] = [
     sportSlug: "running",
     location: "Stockholm · Djurgården",
     time: "Sat 09:15",
+    schedule: "Every Saturday morning",
     audience: "Open to all",
     members: "16 going",
     recommended: true,
     tone: "#8c6110",
     accent: "#fff8dd",
+  },
+  {
+    slug: "norrmalm-mens-padel",
+    name: "Norrmalm Men’s Padel",
+    sport: "Padel",
+    sportSlug: "padel",
+    location: "Stockholm · Norrmalm",
+    time: "Sun 16:00",
+    schedule: "Every Sunday afternoon",
+    audience: "Men only",
+    members: "6 going",
+    recommended: false,
+    tone: "#4b3488",
+    accent: "#e6ddff",
   },
 ];
 
@@ -62,8 +79,14 @@ describe("DiscoverClient", () => {
     expect(screen.getByRole("combobox", { name: /sport/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /women only/i })).toBeInTheDocument();
     expect(screen.getByText(/recommended groups/i)).toBeInTheDocument();
+    expect(screen.getByText("Every Tuesday evening")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /view group/i })[0]).toHaveAttribute("href", "/groups/soder-sparks");
-    expect(within(screen.getByRole("navigation")).getByTestId("account-control")).toBeInTheDocument();
+    const navigation = screen.getByRole("navigation");
+    expect(within(navigation).getByRole("link", { name: /sportship/i })).toBeInTheDocument();
+    expect(within(navigation).getByTestId("account-control")).toBeInTheDocument();
+    expect(within(navigation).queryByRole("link", { name: /start a group/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /start a group/i })).toBeInTheDocument();
+    expect(navigation).not.toHaveClass("flex-col");
   });
 
   it("filters groups by sport and location", () => {
@@ -84,5 +107,14 @@ describe("DiscoverClient", () => {
 
     expect(screen.getByText("Söder Sparks")).toBeInTheDocument();
     expect(screen.queryByText("Parken 5-a-side")).not.toBeInTheDocument();
+  });
+
+  it("filters groups to men-only participation", () => {
+    render(<DiscoverClient groups={groupFixtures} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /^men only$/i }));
+
+    expect(screen.getByText("Norrmalm Men’s Padel")).toBeInTheDocument();
+    expect(screen.queryByText("Söder Sparks")).not.toBeInTheDocument();
   });
 });

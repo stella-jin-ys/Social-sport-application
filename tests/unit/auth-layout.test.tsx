@@ -10,7 +10,7 @@ it("places standalone authentication inside a padded constrained card", () => {
 
   expect(screen.getByRole("main")).toHaveClass("auth-page");
   expect(screen.getByText("Authentication form").parentElement).toHaveClass("auth-page__card");
-  expect(screen.getByRole("link", { name: /huddle home/i })).toHaveAttribute("href", "/");
+  expect(screen.getByRole("link", { name: /sportship home/i })).toHaveAttribute("href", "/");
 });
 
 it("gives standalone auth controls and home link the accent focus treatment", () => {

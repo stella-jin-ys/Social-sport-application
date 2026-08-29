@@ -61,7 +61,7 @@ export function AuthModal() {
       <p className="auth-modal__intro">Sign in to join this group and respond to upcoming sessions.</p>
       <AuthForm onAuthenticated={completePendingJoin} variant={variant} />
       <div className="auth-modal__switch">
-        <span>{variant === "sign-in" ? "New to Huddle?" : "Already have an account?"}</span>
+        <span>{variant === "sign-in" ? "New to Sportship?" : "Already have an account?"}</span>
         <button onClick={() => setVariant((current) => current === "sign-in" ? "sign-up" : "sign-in")} type="button">
           {variant === "sign-in" ? "Create an account" : "Sign in instead"}
         </button>

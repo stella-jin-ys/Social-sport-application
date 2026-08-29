@@ -1,4 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import manifest from "@/app/manifest";
 import HomePage from "@/app/page";
 import { vi } from "vitest";
@@ -21,7 +22,11 @@ describe("HomePage", () => {
     expect(screen.getByRole("button", { name: /football/i })).toBeInTheDocument();
     expect(screen.getByText(/women only/i)).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /view group/i })[0]).toHaveAttribute("href", "/groups/soder-sparks");
-    expect(within(screen.getByRole("navigation")).getByTestId("account-control")).toBeInTheDocument();
+    const navigation = screen.getByRole("navigation");
+    expect(within(navigation).getByRole("link", { name: /sportship/i })).toBeInTheDocument();
+    expect(within(navigation).getByTestId("account-control")).toBeInTheDocument();
+    expect(within(navigation).queryByRole("link", { name: /start a group/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /start a group/i })).toBeInTheDocument();
   });
 
   it("keeps sport controls and nearby groups visually distinct", () => {
@@ -34,11 +39,44 @@ describe("HomePage", () => {
 
     expect(innebandy).toHaveClass("hover:outline-2", "hover:outline-offset-2");
     expect(allSports).toHaveClass("hover:outline-2", "hover:outline-offset-2");
-    expect(innebandy).toHaveStyle({ backgroundColor: "#ffd9cd", color: "#7d2d20" });
-    expect(padel).toHaveStyle({ backgroundColor: "#e6ddff", color: "#4b3488" });
-    expect(screen.getByText(/18 groups/i)).toHaveClass("text-[var(--ink)]");
+    expect(innebandy).toHaveClass("bg-[var(--surface)]", "text-[var(--ink)]");
+    expect(padel).toHaveClass("bg-[var(--surface)]", "text-[var(--ink)]");
+    expect(screen.getByText(/18 groups/i)).toHaveClass("text-[var(--accent-strong)]");
     expect(groupsSection).toHaveClass("bg-[var(--paper)]");
-    expect(screen.getAllByRole("article")[0]).toHaveClass("bg-[var(--surface-muted)]");
+    expect(screen.getAllByRole("article")[0]).toHaveClass("bg-[var(--surface)]");
+  });
+
+  it("filters nearby groups when a sport is selected", async () => {
+    const user = userEvent.setup();
+    render(<HomePage />);
+
+    await user.click(screen.getByRole("button", { name: /football/i }));
+
+    expect(screen.getByRole("button", { name: /football/i })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText(/showing football groups/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /parken 5-a-side/i })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /söder sparks/i })).not.toBeInTheDocument();
+  });
+
+  it("combines a city selection with the active sport", async () => {
+    const user = userEvent.setup();
+    render(<HomePage />);
+
+    await user.click(screen.getByRole("button", { name: /football/i }));
+    await user.selectOptions(screen.getByRole("combobox", { name: /city/i }), "uppsala");
+
+    expect(screen.getByText(/showing football groups in uppsala/i)).toBeInTheDocument();
+    expect(screen.getByText(/no sample groups yet/i)).toBeInTheDocument();
+  });
+
+  it("marks the sport picker and hero for responsive reordering", () => {
+    render(<HomePage />);
+
+    const sportHeading = screen.getByRole("heading", { name: /pick a sport/i });
+    const heroImage = screen.getByRole("img", { name: /women playing floorball/i });
+
+    expect(sportHeading.closest("section")).toHaveClass("home-sports-section");
+    expect(heroImage.closest("section")).toHaveClass("home-hero");
   });
 });
 
@@ -46,7 +84,8 @@ describe("PWA manifest", () => {
   it("exposes the installable app details", () => {
     const appManifest = manifest();
 
-    expect(appManifest.name).toBe("Group Sport");
+    expect(appManifest.name).toBe("Sportship");
+    expect(appManifest.short_name).toBe("Sportship");
     expect(appManifest.display).toBe("standalone");
     expect(appManifest.start_url).toBe("/");
     expect(appManifest.icons).toEqual(

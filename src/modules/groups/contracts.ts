@@ -1,4 +1,4 @@
-export type Audience = "Women only" | "Mixed group" | "Open to all";
+export type Audience = "Women only" | "Men only" | "Mixed group" | "Open to all";
 export type AttendanceChoice = "GOING" | "NOT_GOING";
 
 export type AttendanceResult = {
@@ -27,6 +27,7 @@ export type PublicGroupCard = {
   sportSlug: string;
   location: string;
   time: string;
+  schedule: string;
   audience: Audience;
   members: string;
   recommended: boolean;
@@ -38,7 +39,6 @@ export type GroupPageData = PublicGroupCard & {
   memberCount: number;
   description: string;
   organizer: string;
-  schedule: string;
   viewer: {
     isAuthenticated: boolean;
     isMember: boolean;

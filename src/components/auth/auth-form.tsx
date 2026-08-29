@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { PendingProgress } from "@/components/pending-progress";
 
 export type AuthFormProps = {
   variant: "sign-in" | "sign-up";
@@ -57,7 +58,8 @@ export function AuthForm({ variant, onAuthenticated }: AuthFormProps) {
   return (
     <section className="auth-form">
       <h1 className="auth-form__title">{isSignUp ? "Create an account" : "Sign in"}</h1>
-      <form className="auth-form__fields" onSubmit={handleSubmit}>
+      <PendingProgress active={isPending} label={isSignUp ? "Creating account" : "Signing in"} />
+      <form aria-busy={isPending} aria-label={isSignUp ? "Sign-up form" : "Sign-in form"} className="auth-form__fields" onSubmit={handleSubmit}>
         {isSignUp ? (
           <label>
             <span>Name</span>
@@ -73,7 +75,7 @@ export function AuthForm({ variant, onAuthenticated }: AuthFormProps) {
           <input name="password" minLength={8} onChange={(event) => setPassword(event.target.value)} required type="password" value={password} />
         </label>
         {error ? <p className="auth-form__error" role="alert">{error}</p> : null}
-        <button disabled={isPending} type="submit">{isPending ? "Please wait…" : isSignUp ? "Sign up" : "Sign in"}</button>
+        <button disabled={isPending} type="submit">{isSignUp ? "Sign up" : "Sign in"}</button>
       </form>
     </section>
   );

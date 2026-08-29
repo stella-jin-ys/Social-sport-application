@@ -14,7 +14,11 @@ it("returns database-backed public cards in recommendation order", async () => {
   const groups = await listPublicGroups();
 
   expect(groups).toHaveLength(6);
-  expect(groups[0]).toMatchObject({ slug: "soder-sparks", audience: "Women only" });
+  expect(groups[0]).toMatchObject({
+    slug: "soder-sparks",
+    audience: "Women only",
+    schedule: "Every Tuesday evening",
+  });
 });
 
 it("returns a public detail without private viewer state", async () => {

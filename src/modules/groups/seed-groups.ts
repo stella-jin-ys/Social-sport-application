@@ -3,6 +3,7 @@ import { groupCatalog } from "@/lib/group-catalog";
 
 const participation = {
   "Women only": "WOMEN_ONLY",
+  "Men only": "MEN_ONLY",
   "Mixed group": "MIXED",
   "Open to all": "OPEN",
 } as const;

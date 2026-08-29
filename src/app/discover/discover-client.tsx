@@ -6,10 +6,12 @@ import { useSearchParams } from "next/navigation";
 import { sports } from "@/lib/group-catalog";
 import type { PublicGroupCard } from "@/modules/groups/contracts";
 import { AccountControl } from "@/components/account-control";
+import { StartGroupLink } from "@/components/start-group-link";
 
 const audienceFilters = [
   { label: "Everyone", value: "all" },
   { label: "Women only", value: "Women only" },
+  { label: "Men only", value: "Men only" },
   { label: "Mixed group", value: "Mixed group" },
   { label: "Open to all", value: "Open to all" },
 ] as const;
@@ -30,18 +32,17 @@ function DiscoverContent({ groups }: { groups: PublicGroupCard[] }) {
 
   return (
     <main className="min-h-[100dvh] bg-[var(--paper)] text-[var(--ink)]">
-      <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12">
-        <Link className="font-display text-[1.65rem] font-black tracking-[-0.08em]" href="/">
-          huddle<span className="text-[var(--accent-strong)]">.</span>
+      <nav className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-5 py-5 sm:px-8 lg:grid lg:grid-cols-[1fr_minmax(30rem,34rem)_1fr] lg:px-12">
+        <Link className="font-display text-[1.65rem] font-black tracking-[-0.08em] lg:justify-self-start" href="/">
+          Sportship<span className="text-[var(--accent-strong)]">.</span>
         </Link>
-        <div className="hidden items-center gap-8 text-sm font-semibold text-[var(--muted)] lg:flex">
-          <Link className="text-[var(--ink)]" href="/discover">Discover</Link>
-          <Link className="transition-colors hover:text-[var(--ink)]" href="/#sports">Sports</Link>
-          <Link className="transition-colors hover:text-[var(--ink)]" href="/#for-organizers">For organizers</Link>
+        <div className="main-nav__menu hidden text-sm font-semibold text-[var(--muted)] lg:flex lg:w-full lg:items-center lg:justify-between lg:gap-8">
+          <Link className="inline-flex min-h-11 items-center px-3 text-[var(--ink)]" href="/discover">Discover</Link>
+          <Link className="inline-flex min-h-11 items-center px-3 transition-colors hover:text-[var(--ink)]" href="/#sports">Sports</Link>
+          <Link className="inline-flex min-h-11 items-center px-3 transition-colors hover:text-[var(--ink)]" href="/#for-organizers">For organizers</Link>
         </div>
-        <div className="flex items-center gap-3 text-sm font-bold">
+        <div className="main-nav__account flex justify-end lg:justify-self-end">
           <AccountControl />
-          <Link className="rounded-full bg-[var(--accent)] px-4 py-2.5 text-[var(--accent-foreground)] transition-transform hover:-translate-y-0.5" href="/sign-up">Start a group</Link>
         </div>
       </nav>
 
@@ -50,6 +51,7 @@ function DiscoverContent({ groups }: { groups: PublicGroupCard[] }) {
           <Link className="text-sm font-extrabold text-[var(--accent-strong)] underline decoration-2 underline-offset-4" href="/">← Back home</Link>
           <h1 className="mt-8 font-display text-5xl font-black leading-[0.95] tracking-[-0.07em] sm:text-7xl">Find a group that fits your week.</h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--muted)]">Browse public groups anywhere, then narrow the list by sport, place, and who you want to play with.</p>
+          <StartGroupLink className="mt-7 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-extrabold text-[var(--accent-foreground)] transition-transform hover:-translate-y-0.5" />
         </div>
 
         <div className="mt-12 rounded-[1.5rem] border border-[var(--line-strong)] bg-[var(--surface-muted)] p-5 sm:p-7">
@@ -102,6 +104,7 @@ function DiscoverContent({ groups }: { groups: PublicGroupCard[] }) {
                 <div className="mt-5 space-y-2 text-sm text-[var(--muted)]">
                   <p>{group.location}</p>
                   <p className="font-bold text-[var(--ink)]">{group.time}</p>
+                  <p><span className="font-bold text-[var(--ink)]">Rhythm:</span> {group.schedule}</p>
                 </div>
                 <div className="mt-7 flex items-center justify-between gap-4">
                   <span className="text-sm font-bold text-[var(--muted)]">{group.audience}</span>

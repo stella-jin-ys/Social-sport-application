@@ -49,5 +49,10 @@ it("renders an injected group and next-training details", () => {
   expect(screen.getByText("Stockholm · Södermalm")).toBeInTheDocument();
   expect(screen.getByText(/organized by lina berg/i)).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /next training/i })).toBeInTheDocument();
-  expect(within(screen.getByRole("navigation")).getByTestId("account-control")).toBeInTheDocument();
+  const navigation = screen.getByRole("navigation");
+  expect(within(navigation).getByRole("link", { name: /sportship/i })).toBeInTheDocument();
+  expect(within(navigation).getByTestId("account-control")).toBeInTheDocument();
+  expect(within(navigation).queryByRole("link", { name: /start a group/i })).not.toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /start a group/i })).toBeInTheDocument();
+  expect(navigation).not.toHaveClass("flex-col");
 });
