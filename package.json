@@ -10,6 +10,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "db:seed": "tsx prisma/seed.ts",
+    "mobile:sync": "cap sync",
+    "mobile:open:ios": "cap open ios",
+    "mobile:open:android": "cap open android",
     "test:integration": "vitest run tests/integration",
     "test:e2e": "playwright test"
   },
@@ -23,6 +26,9 @@
   "type": "module",
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.7.1",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/ios": "^8.5.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "better-auth": "^1.7.1",
@@ -34,6 +40,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@capacitor/cli": "^8.5.0",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",

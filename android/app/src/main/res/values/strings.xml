@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Sportship</string>
+    <string name="title_activity_main">Sportship</string>
+    <string name="package_name">com.sportship.app</string>
+    <string name="custom_url_scheme">com.sportship.app</string>
+</resources>
