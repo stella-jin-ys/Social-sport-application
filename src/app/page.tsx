@@ -3,12 +3,21 @@ import { AccountControl } from "@/components/account-control";
 import { HomeDashboard } from "@/components/home/home-dashboard";
 import { HomeFinder } from "@/components/home/home-finder";
 import { getCurrentUser } from "@/lib/current-user";
+import { fallbackPublicGroups } from "@/lib/public-group-fallback";
 import { listJoinedGroups, listPublicGroups, listRecommendedGroups, listUpcomingActivities } from "@/modules/groups/group-queries";
 import type { HomeDashboardData } from "@/modules/groups/contracts";
 
 export default async function HomePage() {
-  const user = await getCurrentUser();
-  const publicGroups = await listPublicGroups();
+  let user = null;
+  let publicGroups = fallbackPublicGroups;
+
+  try {
+    user = await getCurrentUser();
+    publicGroups = await listPublicGroups();
+  } catch (error) {
+    console.error("Failed to load public groups", error);
+    return <><PublicNav /><div className="mx-auto max-w-[1400px] px-5 pt-8 text-sm font-bold text-[var(--muted)]">Browse the starter group catalog while live data connects.</div><HomeFinder groups={publicGroups} /></>;
+  }
 
   if (!user) {
     return <><PublicNav /><HomeFinder groups={publicGroups} /></>;
