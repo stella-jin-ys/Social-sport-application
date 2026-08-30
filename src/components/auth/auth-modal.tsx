@@ -59,7 +59,7 @@ export function AuthModal() {
         <button aria-label="Close" className="auth-modal__close" onClick={closeModal} type="button">Close</button>
       </div>
       <p className="auth-modal__intro">Sign in to join this group and respond to upcoming sessions.</p>
-      <AuthForm onAuthenticated={completePendingJoin} variant={variant} />
+      <AuthForm key={variant} onAuthenticated={completePendingJoin} variant={variant} />
       <div className="auth-modal__switch">
         <span>{variant === "sign-in" ? "New to Sportship?" : "Already have an account?"}</span>
         <button onClick={() => setVariant((current) => current === "sign-in" ? "sign-up" : "sign-in")} type="button">

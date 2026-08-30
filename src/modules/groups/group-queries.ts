@@ -1,6 +1,6 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
-import type { AttendanceChoice, GroupPageData, PublicGroupCard } from "./contracts";
+import type { AttendanceChoice, GroupPageData, JoinedGroupCard, PublicGroupCard, UpcomingActivity } from "./contracts";
 
 type GroupWithNextSession = Prisma.GroupGetPayload<{
   include: { sessions: true };
@@ -84,8 +84,66 @@ const nextSession = {
   take: 1,
 } as const;
 
+const nextUpcomingSession = {
+  where: { canceled: false, startsAt: { gt: new Date() } },
+  orderBy: { startsAt: "asc" },
+  take: 1,
+} as const;
+
+function toActivity(group: { slug: string; name: string }, session: { id: string; title: string; startsAt: Date; endsAt: Date; venue: string; goingCount: number }): UpcomingActivity {
+  return {
+    id: session.id,
+    groupSlug: group.slug,
+    groupName: group.name,
+    title: session.title,
+    startsAt: session.startsAt.toISOString(),
+    endsAt: session.endsAt.toISOString(),
+    venue: session.venue,
+    goingCount: session.goingCount,
+  };
+}
+
 export async function listPublicGroups(): Promise<PublicGroupCard[]> {
   const groups = await prisma.group.findMany({
+    include: { sessions: nextSession },
+    orderBy: [{ recommended: "desc" }, { name: "desc" }],
+  });
+
+  return groups.map(toCard);
+}
+
+export async function listJoinedGroups(userId: string): Promise<JoinedGroupCard[]> {
+  const memberships = await prisma.groupMembership.findMany({
+    where: { userId, status: "ACTIVE" },
+    include: { group: { include: { sessions: nextUpcomingSession } } },
+    orderBy: { joinedAt: "asc" },
+  });
+
+  return memberships.map((membership) => ({
+    ...toCard({ ...membership.group, sessions: membership.group.sessions }),
+    membershipId: membership.id,
+    joinedAt: membership.joinedAt.toISOString(),
+    nextActivity: membership.group.sessions[0] ? toActivity(membership.group, membership.group.sessions[0]) : null,
+  }));
+}
+
+export async function listUpcomingActivities(userId: string): Promise<UpcomingActivity[]> {
+  const sessions = await prisma.activitySession.findMany({
+    where: {
+      canceled: false,
+      startsAt: { gt: new Date() },
+      group: { memberships: { some: { userId, status: "ACTIVE" } } },
+    },
+    include: { group: { select: { slug: true, name: true } } },
+    orderBy: { startsAt: "asc" },
+  });
+
+  return sessions.map((session) => toActivity(session.group, session));
+}
+
+export async function listRecommendedGroups(userId: string): Promise<PublicGroupCard[]> {
+  const groups = await prisma.group.findMany({
+    where: { memberships: { none: { userId, status: "ACTIVE" } } },
     include: { sessions: nextSession },
     orderBy: [{ recommended: "desc" }, { name: "desc" }],
   });

@@ -102,6 +102,23 @@ it("keeps intent after failed authentication and clears it on close", async () =
   expect(readPendingJoin()).toBeNull();
 });
 
+it("clears credentials when switching from a failed sign-in to sign-up", async () => {
+  vi.mocked(authClient.signIn.email).mockResolvedValue({
+    data: null,
+    error: { message: "Invalid credentials" },
+  } as never);
+
+  render(<AuthModal />);
+  await submitCredentials();
+  await screen.findByRole("alert");
+  await user.click(screen.getByRole("button", { name: /create an account/i }));
+
+  expect(screen.getByLabelText(/name/i)).toHaveValue("");
+  expect(screen.getByLabelText(/email/i)).toHaveValue("");
+  expect(screen.getByLabelText(/password/i)).toHaveValue("");
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+});
+
 it("completes the same pending join after a successful retry", async () => {
   setPendingJoin({ groupSlug: "soder-sparks", returnTo: "/groups/soder-sparks" });
   vi.mocked(authClient.signIn.email)

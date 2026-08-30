@@ -1,7 +1,7 @@
 import { beforeEach, expect, it } from "vitest";
 import { createTestUser, prisma, resetDomainData } from "./database";
 import { setAttendance } from "@/modules/activities/attendance-service";
-import { listPublicGroups, getGroupPageData } from "@/modules/groups/group-queries";
+import { listPublicGroups, getGroupPageData, listJoinedGroups, listUpcomingActivities, listRecommendedGroups } from "@/modules/groups/group-queries";
 import { joinOpenGroup } from "@/modules/groups/membership-service";
 import { seedGroups } from "@/modules/groups/seed-groups";
 
@@ -45,4 +45,26 @@ it("returns member and attendance state for an authenticated viewer", async () =
     attendanceStatus: "GOING",
   });
   expect(group?.nextTraining?.goingCount).toBe(13);
+});
+
+it("returns only active joined groups with their next activity", async () => {
+  await createTestUser("dashboard-member");
+  await joinOpenGroup("dashboard-member", "soder-sparks");
+
+  const joined = await listJoinedGroups("dashboard-member");
+
+  expect(joined).toHaveLength(1);
+  expect(joined[0]).toMatchObject({ slug: "soder-sparks", sportSlug: "innebandy" });
+  expect(joined[0].nextActivity?.id).toBe("session-soder-sparks-next");
+});
+
+it("orders upcoming activities and excludes joined groups from recommendations", async () => {
+  await createTestUser("dashboard-member");
+  await joinOpenGroup("dashboard-member", "soder-sparks");
+
+  const activities = await listUpcomingActivities("dashboard-member");
+  const recommendations = await listRecommendedGroups("dashboard-member");
+
+  expect(activities[0].groupSlug).toBe("soder-sparks");
+  expect(recommendations.some((group) => group.slug === "soder-sparks")).toBe(false);
 });

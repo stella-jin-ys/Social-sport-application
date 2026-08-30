@@ -35,6 +35,29 @@ export type PublicGroupCard = {
   accent: string;
 };
 
+export type UpcomingActivity = {
+  id: string;
+  groupSlug: string;
+  groupName: string;
+  title: string;
+  startsAt: string;
+  endsAt: string;
+  venue: string;
+  goingCount: number;
+};
+
+export type JoinedGroupCard = PublicGroupCard & {
+  membershipId: string;
+  joinedAt: string;
+  nextActivity: UpcomingActivity | null;
+};
+
+export type HomeDashboardData = {
+  joinedGroups: JoinedGroupCard[];
+  upcomingActivities: UpcomingActivity[];
+  recommendedGroups: PublicGroupCard[];
+};
+
 export type GroupPageData = PublicGroupCard & {
   memberCount: number;
   description: string;
