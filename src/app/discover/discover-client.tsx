@@ -95,7 +95,7 @@ function DiscoverContent({ groups }: { groups: PublicGroupCard[] }) {
         {visibleGroups.length > 0 ? (
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
             {visibleGroups.map((group) => (
-              <article className="group rounded-[1.5rem] border border-[var(--line-strong)] bg-[var(--surface-muted)] p-6 shadow-[0_10px_30px_rgba(41,52,58,0.06)] transition-all hover:-translate-y-1 hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-[var(--ink)]" key={group.name}>
+              <article className="group rounded-[1.5rem] border border-[var(--line-strong)] bg-[var(--surface-muted)] p-6 shadow-[0_10px_30px_rgba(41,52,58,0.06)] transition-all hover:-translate-y-1 hover:outline hover:outline-2 hover:outline-offset-2 hover:outline-[var(--ink)]" key={group.slug}>
                 <div className="flex items-start justify-between gap-4">
                   <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ backgroundColor: group.accent, color: group.tone }}>{group.sport}</span>
                   <span className="text-sm font-extrabold text-[var(--muted)]">{group.members}</span>

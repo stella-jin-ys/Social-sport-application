@@ -71,6 +71,17 @@ const groupFixtures: PublicGroupCard[] = [
 ];
 
 describe("DiscoverClient", () => {
+  it("renders groups with duplicate names without a React key warning", () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const duplicateNameGroup = { ...groupFixtures[0], slug: "soder-sparks-two" };
+
+    render(<DiscoverClient groups={[groupFixtures[0], duplicateNameGroup]} />);
+
+    const warnings = consoleError.mock.calls.flat().join(" ");
+    expect(warnings).not.toContain("same key");
+    consoleError.mockRestore();
+  });
+
   it("gives anyone a public way to browse groups", () => {
     render(<DiscoverClient groups={groupFixtures} />);
 
