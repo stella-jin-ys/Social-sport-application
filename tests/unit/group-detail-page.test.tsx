@@ -40,6 +40,12 @@ const group: GroupPageData = {
     venue: "Eriksdalshallen",
     goingCount: 12,
   },
+  comments: [{
+    id: "comment-1",
+    body: "Should we warm up before Tuesday?",
+    authorName: "Jin Demo",
+    createdAt: "2026-08-30T10:00:00.000Z",
+  }],
 };
 
 it("renders an injected group and next-training details", () => {
@@ -49,6 +55,8 @@ it("renders an injected group and next-training details", () => {
   expect(screen.getByText("Stockholm · Södermalm")).toBeInTheDocument();
   expect(screen.getByText(/organized by lina berg/i)).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /next training/i })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /discussion/i })).toBeInTheDocument();
+  expect(screen.getByText("Should we warm up before Tuesday?")).toBeInTheDocument();
   const navigation = screen.getByRole("navigation");
   expect(within(navigation).getByRole("link", { name: /sportship/i })).toBeInTheDocument();
   expect(within(navigation).getByTestId("account-control")).toBeInTheDocument();

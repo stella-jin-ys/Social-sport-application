@@ -24,6 +24,7 @@ model User {
   accounts            Account[]
   groupMemberships    GroupMembership[]
   attendanceResponses AttendanceResponse[]
+  comments          GroupComment[]
 
   @@unique([email])
   @@map("user")
@@ -128,6 +129,7 @@ model Group {
   updatedAt      DateTime          @updatedAt
   memberships    GroupMembership[]
   sessions       ActivitySession[]
+  comments       GroupComment[]
 
   @@index([sportSlug])
   @@index([participation])
@@ -147,6 +149,19 @@ model GroupMembership {
 
   @@unique([groupId, userId])
   @@index([userId, status])
+}
+
+model GroupComment {
+  id        String   @id @default(cuid())
+  groupId   String
+  userId    String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([groupId, createdAt])
 }
 
 model ActivitySession {

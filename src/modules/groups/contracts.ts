@@ -74,4 +74,16 @@ export type GroupPageData = PublicGroupCard & {
     venue: string;
     goingCount: number;
   } | null;
+  comments: GroupCommentView[];
 };
+
+export type GroupCommentView = {
+  id: string;
+  body: string;
+  authorName: string;
+  createdAt: string;
+};
+
+export type CommentActionResult =
+  | { ok: true; comment: GroupCommentView }
+  | { ok: false; code: "AUTH_REQUIRED" | "NOT_MEMBER" | "GROUP_NOT_FOUND" | "INVALID_BODY" | "UNKNOWN"; message: string };
