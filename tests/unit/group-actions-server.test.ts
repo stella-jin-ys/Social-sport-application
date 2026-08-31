@@ -17,7 +17,7 @@ vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }));
 
-import { joinGroupAction, setAttendanceAction } from "@/app/groups/[slug]/actions";
+import { createGroupCommentAction, joinGroupAction, setAttendanceAction } from "@/app/groups/[slug]/actions";
 import { getCurrentUser } from "@/lib/current-user";
 import { setAttendance } from "@/modules/activities/attendance-service";
 import { joinOpenGroup } from "@/modules/groups/membership-service";
@@ -42,4 +42,19 @@ it("does not call the attendance service without a session", async () => {
 
   expect(result).toMatchObject({ ok: false, code: "AUTH_REQUIRED" });
   expect(setAttendance).not.toHaveBeenCalled();
+});
+
+it("does not create a comment without a session", async () => {
+  vi.mocked(getCurrentUser).mockResolvedValue(null);
+
+  const result = await createGroupCommentAction("soder-sparks", "hello team");
+
+  expect(result).toMatchObject({ ok: false, code: "AUTH_REQUIRED" });
+});
+
+it("rejects blank comments before checking membership", async () => {
+  const result = await createGroupCommentAction("soder-sparks", "   ");
+
+  expect(result).toMatchObject({ ok: false, code: "INVALID_BODY" });
+  expect(getCurrentUser).not.toHaveBeenCalled();
 });

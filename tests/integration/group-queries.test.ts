@@ -47,6 +47,24 @@ it("returns member and attendance state for an authenticated viewer", async () =
   expect(group?.nextTraining?.goingCount).toBe(13);
 });
 
+it("returns newest group comments with author names", async () => {
+  await createTestUser("commenter-a");
+  await createTestUser("commenter-b");
+  await joinOpenGroup("commenter-a", "soder-sparks");
+  await joinOpenGroup("commenter-b", "soder-sparks");
+  await prisma.groupComment.createMany({
+    data: [
+      { groupId: (await prisma.group.findUniqueOrThrow({ where: { slug: "soder-sparks" } })).id, userId: "commenter-a", body: "First message", createdAt: new Date("2026-08-30T10:00:00Z"), updatedAt: new Date("2026-08-30T10:00:00Z") },
+      { groupId: (await prisma.group.findUniqueOrThrow({ where: { slug: "soder-sparks" } })).id, userId: "commenter-b", body: "Latest message", createdAt: new Date("2026-08-30T11:00:00Z"), updatedAt: new Date("2026-08-30T11:00:00Z") },
+    ],
+  });
+
+  const group = await getGroupPageData("soder-sparks", "commenter-a");
+
+  expect(group?.comments.map((comment) => comment.body)).toEqual(["Latest message", "First message"]);
+  expect(group?.comments[0].authorName).toBe("commenter-b");
+});
+
 it("returns only active joined groups with their next activity", async () => {
   await createTestUser("dashboard-member");
   await joinOpenGroup("dashboard-member", "soder-sparks");

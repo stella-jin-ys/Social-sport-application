@@ -1,10 +1,19 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
-import type { AttendanceChoice, GroupPageData, JoinedGroupCard, PublicGroupCard, UpcomingActivity } from "./contracts";
+import type { AttendanceChoice, GroupCommentView, GroupPageData, JoinedGroupCard, PublicGroupCard, UpcomingActivity } from "./contracts";
 
 type GroupWithNextSession = Prisma.GroupGetPayload<{
   include: { sessions: true };
 }>;
+
+type GroupCommentRecord = {
+  id: string;
+  body: string;
+  createdAt: Date;
+  user: { name: string };
+};
+
+type GroupWithComments = GroupWithNextSession & { comments: GroupCommentRecord[] };
 
 const audienceLabels = {
   WOMEN_ONLY: "Women only",
@@ -54,7 +63,7 @@ function formatDate(date: Date): string {
 }
 
 function toGroupPageData(
-  group: GroupWithNextSession,
+  group: GroupWithComments,
   viewer: GroupPageData["viewer"],
 ): GroupPageData {
   const next = group.sessions[0];
@@ -75,6 +84,12 @@ function toGroupPageData(
           goingCount: next.goingCount,
         }
       : null,
+    comments: group.comments.map((comment): GroupCommentView => ({
+      id: comment.id,
+      body: comment.body,
+      authorName: comment.user.name,
+      createdAt: comment.createdAt.toISOString(),
+    })),
   };
 }
 
@@ -158,7 +173,14 @@ export async function getGroupPageData(
   if (!userId) {
     const group = await prisma.group.findUnique({
       where: { slug },
-      include: { sessions: nextSession },
+      include: {
+        sessions: nextSession,
+        comments: {
+          include: { user: { select: { name: true } } },
+          orderBy: { createdAt: "desc" },
+          take: 50,
+        },
+      },
     });
 
     return group
@@ -176,6 +198,11 @@ export async function getGroupPageData(
       memberships: {
         where: { userId, status: "ACTIVE" },
         select: { id: true },
+      },
+      comments: {
+        include: { user: { select: { name: true } } },
+        orderBy: { createdAt: "desc" },
+        take: 50,
       },
       sessions: {
         ...nextSession,

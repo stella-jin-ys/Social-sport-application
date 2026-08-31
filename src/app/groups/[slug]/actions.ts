@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/current-user";
-import type { AttendanceActionResult, AttendanceChoice, JoinGroupActionResult } from "@/modules/groups/contracts";
+import type { AttendanceActionResult, AttendanceChoice, CommentActionResult, JoinGroupActionResult } from "@/modules/groups/contracts";
 import { AttendanceError, setAttendance } from "@/modules/activities/attendance-service";
 import { JoinGroupError, joinOpenGroup } from "@/modules/groups/membership-service";
 
@@ -13,6 +13,7 @@ const attendanceInput = z.object({
   sessionId: z.string().min(1).max(120),
   status: z.enum(["GOING", "NOT_GOING"]),
 });
+const commentBodyInput = z.string().trim().min(1).max(500);
 
 export async function joinGroupAction(groupSlug: string): Promise<JoinGroupActionResult> {
   const parsedSlug = groupSlugInput.safeParse(groupSlug);
@@ -92,5 +93,61 @@ export async function setAttendanceAction(
       code: "UNKNOWN",
       message: "We could not save your response. Please try again.",
     };
+  }
+}
+
+export async function createGroupCommentAction(groupSlug: string, body: string): Promise<CommentActionResult> {
+  const parsedSlug = groupSlugInput.safeParse(groupSlug);
+  const parsedBody = commentBodyInput.safeParse(body);
+
+  if (!parsedSlug.success) {
+    return { ok: false, code: "GROUP_NOT_FOUND", message: "Group not found." };
+  }
+
+  if (!parsedBody.success) {
+    return { ok: false, code: "INVALID_BODY", message: "Write a comment before posting." };
+  }
+
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return { ok: false, code: "AUTH_REQUIRED", message: "Please sign in to join the conversation." };
+  }
+
+  try {
+    const group = await prisma.group.findUnique({ where: { slug: parsedSlug.data }, select: { id: true } });
+
+    if (!group) {
+      return { ok: false, code: "GROUP_NOT_FOUND", message: "Group not found." };
+    }
+
+    const membership = await prisma.groupMembership.findFirst({
+      where: { groupId: group.id, userId: user.id, status: "ACTIVE" },
+      select: { id: true },
+    });
+
+    if (!membership) {
+      return { ok: false, code: "NOT_MEMBER", message: "Join the group to comment." };
+    }
+
+    const comment = await prisma.groupComment.create({
+      data: { groupId: group.id, userId: user.id, body: parsedBody.data },
+      include: { user: { select: { name: true } } },
+    });
+
+    revalidatePath(`/groups/${parsedSlug.data}`);
+
+    return {
+      ok: true,
+      comment: {
+        id: comment.id,
+        body: comment.body,
+        authorName: comment.user.name,
+        createdAt: comment.createdAt.toISOString(),
+      },
+    };
+  } catch (error) {
+    console.error("Failed to create group comment", error);
+    return { ok: false, code: "UNKNOWN", message: "We could not post your comment. Please try again." };
   }
 }
