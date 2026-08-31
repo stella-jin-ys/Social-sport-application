@@ -27,6 +27,7 @@ it("returns a public detail without private viewer state", async () => {
   expect(group?.viewer).toEqual({
     isAuthenticated: false,
     isMember: false,
+    canEdit: false,
     attendanceStatus: null,
   });
   expect(group?.nextTraining?.id).toBe("session-soder-sparks-next");
@@ -42,6 +43,7 @@ it("returns member and attendance state for an authenticated viewer", async () =
   expect(group?.viewer).toEqual({
     isAuthenticated: true,
     isMember: true,
+    canEdit: false,
     attendanceStatus: "GOING",
   });
   expect(group?.nextTraining?.goingCount).toBe(13);
