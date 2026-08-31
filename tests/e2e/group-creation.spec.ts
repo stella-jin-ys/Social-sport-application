@@ -30,7 +30,10 @@ test("creates a recurring men-only group and displays its rhythm on the profile"
   await page.getByLabel("City").fill("Stockholm");
   await page.getByLabel("Who can join?").selectOption("MEN_ONLY");
   await page.getByRole("checkbox", { name: /recurring schedule/i }).check();
-  await page.getByLabel("Schedule rhythm").fill("Every Friday at 18:30");
+  await page.getByLabel("Training day").selectOption("5");
+  await page.getByLabel("Venue").fill("Football pitch");
+  await page.getByLabel("Starts").fill("18:30");
+  await page.getByLabel("Ends").fill("20:00");
   await page.getByLabel("Description").fill("A welcoming weekly five-a-side group.");
   await page.getByRole("button", { name: "Create group" }).click();
 

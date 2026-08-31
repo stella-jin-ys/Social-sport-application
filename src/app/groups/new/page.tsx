@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import { sportColors } from "@/lib/group-creation-options";
 import { parseGroupCreationInput } from "@/modules/groups/group-creation";
+import { nextDate } from "@/modules/groups/recurrence";
 
 function slugify(value: string) {
   return value.toLowerCase().trim().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -40,9 +41,19 @@ async function createGroup(formData: FormData) {
         description: input.description,
         organizerName: user.name,
         schedule: input.schedule,
+        recurrenceWeekday: input.recurrenceWeekday,
+        recurrenceStartTime: input.recurrenceStartTime,
+        recurrenceEndTime: input.recurrenceEndTime,
+        recurrenceVenue: input.recurrenceVenue,
         memberships: { create: { userId: user.id, role: "ORGANIZER" } },
       },
     });
+
+    if (input.recurrenceWeekday !== null && input.recurrenceStartTime && input.recurrenceEndTime && input.recurrenceVenue) {
+      const startsAt = nextDate(input.recurrenceWeekday, input.recurrenceStartTime);
+      const endsAt = nextDate(input.recurrenceWeekday, input.recurrenceEndTime, startsAt);
+      await tx.activitySession.create({ data: { id: `session-${created.slug}-next`, groupId: created.id, title: `${input.name} training`, startsAt, endsAt, venue: input.recurrenceVenue } });
+    }
 
     return created;
   });

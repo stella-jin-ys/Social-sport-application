@@ -180,8 +180,8 @@ export async function updateGroupDetailsAction(groupSlug: string, input: GroupUp
 
     const [startHour, startMinute] = parsedInput.data.startTime.split(":").map(Number);
     const [endHour, endMinute] = parsedInput.data.endTime.split(":").map(Number);
-    const startsAt = new Date(`${parsedInput.data.date}T${parsedInput.data.startTime}:00`);
-    const endsAt = new Date(`${parsedInput.data.date}T${parsedInput.data.endTime}:00`);
+    const startsAt = new Date(`${parsedInput.data.date}T${parsedInput.data.startTime}:00+02:00`);
+    const endsAt = new Date(`${parsedInput.data.date}T${parsedInput.data.endTime}:00+02:00`);
     if (!Number.isFinite(startHour) || !Number.isFinite(startMinute) || !Number.isFinite(endHour) || !Number.isFinite(endMinute) || endsAt <= startsAt) {
       return { ok: false, code: "INVALID_INPUT", message: "The end time must be after the start time." };
     }

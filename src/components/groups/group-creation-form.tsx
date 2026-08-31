@@ -51,10 +51,12 @@ export function GroupCreationForm({ action }: GroupCreationFormProps) {
           </span>
         </label>
         {isRecurring ? (
-          <label className="mt-4 grid gap-2 text-sm font-extrabold">
-            Schedule rhythm
-            <input className={fieldClassName} name="rhythm" placeholder="Every Wednesday evening" required />
-          </label>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <label className="grid gap-2 text-sm font-extrabold">Training day<select className={fieldClassName} defaultValue="" name="weekday" required><option disabled value="">Choose a day</option>{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day, index) => <option key={day} value={index}>{day}</option>)}</select></label>
+            <label className="grid gap-2 text-sm font-extrabold">Venue<input className={fieldClassName} name="venue" placeholder="Eriksdalshallen" required /></label>
+            <label className="grid gap-2 text-sm font-extrabold">Starts<input className={fieldClassName} name="startTime" type="time" required /></label>
+            <label className="grid gap-2 text-sm font-extrabold">Ends<input className={fieldClassName} name="endTime" type="time" required /></label>
+          </div>
         ) : null}
       </fieldset>
       <label className="grid gap-2 text-sm font-extrabold">

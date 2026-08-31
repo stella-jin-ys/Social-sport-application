@@ -36,6 +36,12 @@ const stockholmTimeFormatter = new Intl.DateTimeFormat("en-GB", {
   hour12: false,
   timeZone: "Europe/Stockholm",
 });
+const stockholmDateValueFormatter = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: "Europe/Stockholm",
+});
 
 function toCard(group: GroupWithNextSession): PublicGroupCard {
   const next = group.sessions[0];
@@ -82,6 +88,9 @@ function toGroupPageData(
           title: next.title,
           startsAt: next.startsAt.toISOString(),
           endsAt: next.endsAt.toISOString(),
+          dateValue: stockholmDateValueFormatter.format(next.startsAt),
+          startTimeValue: stockholmTimeFormatter.format(next.startsAt),
+          endTimeValue: stockholmTimeFormatter.format(next.endsAt),
           date: formatDate(next.startsAt),
           time: `${stockholmTimeFormatter.format(next.startsAt)}–${stockholmTimeFormatter.format(next.endsAt)}`,
           venue: next.venue,
@@ -184,7 +193,7 @@ export async function getGroupPageData(
 ): Promise<GroupPageData | null> {
   const recurringGroup = await prisma.group.findUnique({
     where: { slug },
-    select: { id: true, slug: true, recurrenceWeekday: true, recurrenceStartTime: true, recurrenceEndTime: true, recurrenceVenue: true },
+    select: { id: true, slug: true, location: true, schedule: true, recurrenceWeekday: true, recurrenceStartTime: true, recurrenceEndTime: true, recurrenceVenue: true },
   });
   if (recurringGroup) await ensureNextRecurringSession(recurringGroup);
 

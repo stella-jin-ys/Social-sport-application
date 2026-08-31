@@ -18,7 +18,7 @@ beforeEach(() => {
   formStatus.pending = false;
 });
 
-it("stores a recurring rhythm and accepts men-only participation", () => {
+it("stores a structured recurring schedule and accepts men-only participation", () => {
   const formData = new FormData();
   formData.set("name", "Friday Football");
   formData.set("sport", "Football");
@@ -26,11 +26,16 @@ it("stores a recurring rhythm and accepts men-only participation", () => {
   formData.set("participation", "MEN_ONLY");
   formData.set("description", "A welcoming weekly five-a-side group.");
   formData.set("recurring", "on");
-  formData.set("rhythm", "Every Friday at 18:30");
+  formData.set("weekday", "5");
+  formData.set("startTime", "18:30");
+  formData.set("endTime", "20:00");
+  formData.set("venue", "Football pitch");
 
   expect(parseGroupCreationInput(formData)).toMatchObject({
     participation: "MEN_ONLY",
     schedule: "Every Friday at 18:30",
+    recurrenceWeekday: 5,
+    recurrenceStartTime: "18:30",
   });
 });
 
@@ -47,7 +52,7 @@ it("uses a flexible schedule when recurring is not selected", () => {
   });
 });
 
-it("rejects a recurring group without a rhythm", () => {
+it("rejects a recurring group without structured times", () => {
   const formData = new FormData();
   formData.set("name", "Weekend Runners");
   formData.set("sport", "Running");
@@ -56,18 +61,19 @@ it("rejects a recurring group without a rhythm", () => {
   formData.set("description", "Runs arranged around the group each week.");
   formData.set("recurring", "on");
 
+  formData.set("weekday", "5");
   expect(parseGroupCreationInput(formData)).toBeNull();
 });
 
-it("reveals a required rhythm only when recurring is selected", () => {
+it("reveals required schedule fields only when recurring is selected", () => {
   render(<GroupCreationForm action={vi.fn()} />);
 
   expect(screen.getByRole("option", { name: "Men only" })).toBeInTheDocument();
-  expect(screen.queryByLabelText(/schedule rhythm/i)).not.toBeInTheDocument();
+  expect(screen.queryByLabelText(/training day/i)).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("checkbox", { name: /recurring schedule/i }));
 
-  expect(screen.getByLabelText(/schedule rhythm/i)).toBeRequired();
+  expect(screen.getByLabelText(/training day/i)).toBeRequired();
 });
 
 it("shows the shared indeterminate state while group creation is pending", () => {

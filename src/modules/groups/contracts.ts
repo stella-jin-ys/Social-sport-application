@@ -79,6 +79,9 @@ export type GroupPageData = PublicGroupCard & {
     title?: string;
     startsAt?: string;
     endsAt?: string;
+    dateValue?: string;
+    startTimeValue?: string;
+    endTimeValue?: string;
     date: string;
     time: string;
     venue: string;

@@ -14,6 +14,9 @@ export function GroupEditor({ group }: { group: GroupPageData }) {
   if (!group.viewer.canEdit || !next) return null;
   const startsAt = next.startsAt ?? new Date().toISOString();
   const endsAt = next.endsAt ?? startsAt;
+  const dateValue = next.dateValue ?? startsAt.slice(0, 10);
+  const startTimeValue = next.startTimeValue ?? startsAt.slice(11, 16);
+  const endTimeValue = next.endTimeValue ?? endsAt.slice(11, 16);
 
   async function save(formData: FormData) {
     setMessage(null);
@@ -29,10 +32,10 @@ export function GroupEditor({ group }: { group: GroupPageData }) {
       {open ? <form action={save} className="mt-5 grid gap-4 sm:grid-cols-2">
         <label className="grid gap-2 text-sm font-extrabold sm:col-span-2">Sport<select className={field} defaultValue={group.sport} name="sport">{sportOptions.map((sport) => <option key={sport}>{sport}</option>)}</select></label>
         <label className="grid gap-2 text-sm font-extrabold sm:col-span-2">Next training title<input className={field} defaultValue={next.title ?? "Training"} name="title" required /></label>
-        <label className="grid gap-2 text-sm font-extrabold">Date<input className={field} defaultValue={startsAt.slice(0, 10)} name="date" type="date" required /></label>
+        <label className="grid gap-2 text-sm font-extrabold">Date<input className={field} defaultValue={dateValue} name="date" type="date" required /></label>
         <label className="grid gap-2 text-sm font-extrabold">Venue<input className={field} defaultValue={next.venue} name="venue" required /></label>
-        <label className="grid gap-2 text-sm font-extrabold">Starts<input className={field} defaultValue={startsAt.slice(11, 16)} name="startTime" type="time" required /></label>
-        <label className="grid gap-2 text-sm font-extrabold">Ends<input className={field} defaultValue={endsAt.slice(11, 16)} name="endTime" type="time" required /></label>
+        <label className="grid gap-2 text-sm font-extrabold">Starts<input className={field} defaultValue={startTimeValue} name="startTime" type="time" required /></label>
+        <label className="grid gap-2 text-sm font-extrabold">Ends<input className={field} defaultValue={endTimeValue} name="endTime" type="time" required /></label>
         <button className="w-fit rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-extrabold text-white" type="submit">Save next training</button>
         {message ? <p aria-live="polite" className="text-sm text-[var(--muted)] sm:col-span-2">{message}</p> : null}
       </form> : null}
