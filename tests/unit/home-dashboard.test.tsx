@@ -16,6 +16,10 @@ it("shows joined groups, upcoming activity, and search recommendations", () => {
   expect(screen.getByRole("heading", { name: /upcoming training & events/i })).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /search other groups/i })).toHaveAttribute("href", "/discover");
   expect(screen.getByRole("heading", { name: /groups you might like/i })).toBeInTheDocument();
+  const upcomingHeading = screen.getByRole("heading", { name: /upcoming training & events/i });
+  const joinedHeading = screen.getByRole("heading", { name: /your groups/i });
+  expect(upcomingHeading.compareDocumentPosition(joinedHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(screen.queryByText(/next up/i)).not.toBeInTheDocument();
 });
 
 it("shows a find-a-group empty state for members without groups", () => {
