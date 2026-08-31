@@ -45,5 +45,5 @@ function PublicNav() {
 }
 
 function DashboardNav() {
-  return <nav className="app-nav mx-auto flex max-w-[1400px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12"><Link className="font-display text-[1.7rem] font-black tracking-[-0.08em]" href="/">Sportship<span className="text-[var(--accent-strong)]">.</span></Link><Link className="text-sm font-extrabold text-[var(--accent-strong)]" href="/discover">Discover groups →</Link><AccountControl /></nav>;
+  return <nav className="app-nav mx-auto flex max-w-[1400px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12"><Link className="font-display text-[1.7rem] font-black tracking-[-0.08em]" href="/">Sportship<span className="text-[var(--accent-strong)]">.</span></Link><AccountControl /></nav>;
 }
