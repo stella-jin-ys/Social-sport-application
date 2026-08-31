@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AccountControl } from "@/components/account-control";
 import { StartGroupLink } from "@/components/start-group-link";
 import { GroupActions } from "./group-actions";
+import { GroupComments } from "./group-comments";
 import type { GroupPageData } from "@/modules/groups/contracts";
 
 export function GroupDetail({ group }: { group: GroupPageData }) {
@@ -69,6 +70,12 @@ export function GroupDetail({ group }: { group: GroupPageData }) {
           memberCount={group.memberCount}
           nextTraining={group.nextTraining}
           scope="attendance"
+        />
+        <GroupComments
+          comments={group.comments}
+          groupSlug={group.slug}
+          isAuthenticated={group.viewer.isAuthenticated}
+          isMember={group.viewer.isMember}
         />
       </div>
     </main>
