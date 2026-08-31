@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/current-user";
-import type { AttendanceActionResult, AttendanceChoice, CommentActionResult, JoinGroupActionResult } from "@/modules/groups/contracts";
+import type { AttendanceActionResult, AttendanceChoice, CommentActionResult, GroupUpdateActionResult, GroupUpdateInput, JoinGroupActionResult } from "@/modules/groups/contracts";
+import { sportOptions } from "@/lib/group-creation-options";
 import { AttendanceError, setAttendance } from "@/modules/activities/attendance-service";
 import { JoinGroupError, joinOpenGroup } from "@/modules/groups/membership-service";
 
@@ -14,6 +15,14 @@ const attendanceInput = z.object({
   status: z.enum(["GOING", "NOT_GOING"]),
 });
 const commentBodyInput = z.string().trim().min(1).max(500);
+const groupUpdateInput = z.object({
+  sport: z.string().refine((value) => sportOptions.includes(value as (typeof sportOptions)[number])),
+  title: z.string().trim().min(2).max(120),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  startTime: z.string().regex(/^\d{2}:\d{2}$/),
+  endTime: z.string().regex(/^\d{2}:\d{2}$/),
+  venue: z.string().trim().min(2).max(120),
+});
 
 export async function joinGroupAction(groupSlug: string): Promise<JoinGroupActionResult> {
   const parsedSlug = groupSlugInput.safeParse(groupSlug);
@@ -149,5 +158,45 @@ export async function createGroupCommentAction(groupSlug: string, body: string):
   } catch (error) {
     console.error("Failed to create group comment", error);
     return { ok: false, code: "UNKNOWN", message: "We could not post your comment. Please try again." };
+  }
+}
+
+export async function updateGroupDetailsAction(groupSlug: string, input: GroupUpdateInput): Promise<GroupUpdateActionResult> {
+  const parsedSlug = groupSlugInput.safeParse(groupSlug);
+  const parsedInput = groupUpdateInput.safeParse(input);
+  if (!parsedSlug.success) return { ok: false, code: "GROUP_NOT_FOUND", message: "Group not found." };
+  if (!parsedInput.success) return { ok: false, code: "INVALID_INPUT", message: "Check the sport and next training details." };
+
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, code: "AUTH_REQUIRED", message: "Please sign in as an organizer to edit this group." };
+
+  try {
+    const group = await prisma.group.findUnique({
+      where: { slug: parsedSlug.data },
+      include: { memberships: { where: { userId: user.id, status: "ACTIVE", role: "ORGANIZER" }, select: { id: true } }, sessions: { where: { canceled: false, startsAt: { gt: new Date() } }, orderBy: { startsAt: "asc" }, take: 1 } },
+    });
+    if (!group) return { ok: false, code: "GROUP_NOT_FOUND", message: "Group not found." };
+    if (!group.memberships.length) return { ok: false, code: "NOT_ORGANIZER", message: "Only the creator or an organizer can edit this group." };
+
+    const [startHour, startMinute] = parsedInput.data.startTime.split(":").map(Number);
+    const [endHour, endMinute] = parsedInput.data.endTime.split(":").map(Number);
+    const startsAt = new Date(`${parsedInput.data.date}T${parsedInput.data.startTime}:00`);
+    const endsAt = new Date(`${parsedInput.data.date}T${parsedInput.data.endTime}:00`);
+    if (!Number.isFinite(startHour) || !Number.isFinite(startMinute) || !Number.isFinite(endHour) || !Number.isFinite(endMinute) || endsAt <= startsAt) {
+      return { ok: false, code: "INVALID_INPUT", message: "The end time must be after the start time." };
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.group.update({ where: { id: group.id }, data: { sport: parsedInput.data.sport, sportSlug: parsedInput.data.sport.toLowerCase() } });
+      const next = group.sessions[0];
+      if (next) await tx.activitySession.update({ where: { id: next.id }, data: { title: parsedInput.data.title, startsAt, endsAt, venue: parsedInput.data.venue } });
+    });
+    revalidatePath(`/groups/${parsedSlug.data}`);
+    revalidatePath("/");
+    revalidatePath("/discover");
+    return { ok: true };
+  } catch (error) {
+    console.error("Failed to update group details", error);
+    return { ok: false, code: "UNKNOWN", message: "We could not update this group. Please try again." };
   }
 }

@@ -125,6 +125,10 @@ model Group {
   description    String
   organizerName  String
   schedule       String
+  recurrenceWeekday    Int?
+  recurrenceStartTime  String?
+  recurrenceEndTime    String?
+  recurrenceVenue       String?
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
   memberships    GroupMembership[]

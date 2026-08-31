@@ -3,6 +3,7 @@ import { AccountControl } from "@/components/account-control";
 import { StartGroupLink } from "@/components/start-group-link";
 import { GroupActions } from "./group-actions";
 import { GroupComments } from "./group-comments";
+import { GroupEditor } from "./group-editor";
 import type { GroupPageData } from "@/modules/groups/contracts";
 
 export function GroupDetail({ group }: { group: GroupPageData }) {
@@ -61,6 +62,7 @@ export function GroupDetail({ group }: { group: GroupPageData }) {
             />
           </aside>
         </section>
+        <GroupEditor group={group} />
 
         <GroupActions
           attendanceStatus={group.viewer.attendanceStatus}

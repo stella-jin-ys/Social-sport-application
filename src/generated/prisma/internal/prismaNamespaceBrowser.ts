@@ -154,6 +154,10 @@ export const GroupScalarFieldEnum = {
   description: 'description',
   organizerName: 'organizerName',
   schedule: 'schedule',
+  recurrenceWeekday: 'recurrenceWeekday',
+  recurrenceStartTime: 'recurrenceStartTime',
+  recurrenceEndTime: 'recurrenceEndTime',
+  recurrenceVenue: 'recurrenceVenue',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -28,10 +28,12 @@ export type AggregateGroup = {
 
 export type GroupAvgAggregateOutputType = {
   memberCount: number | null
+  recurrenceWeekday: number | null
 }
 
 export type GroupSumAggregateOutputType = {
   memberCount: number | null
+  recurrenceWeekday: number | null
 }
 
 export type GroupMinAggregateOutputType = {
@@ -51,6 +53,10 @@ export type GroupMinAggregateOutputType = {
   description: string | null
   organizerName: string | null
   schedule: string | null
+  recurrenceWeekday: number | null
+  recurrenceStartTime: string | null
+  recurrenceEndTime: string | null
+  recurrenceVenue: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +78,10 @@ export type GroupMaxAggregateOutputType = {
   description: string | null
   organizerName: string | null
   schedule: string | null
+  recurrenceWeekday: number | null
+  recurrenceStartTime: string | null
+  recurrenceEndTime: string | null
+  recurrenceVenue: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -93,6 +103,10 @@ export type GroupCountAggregateOutputType = {
   description: number
   organizerName: number
   schedule: number
+  recurrenceWeekday: number
+  recurrenceStartTime: number
+  recurrenceEndTime: number
+  recurrenceVenue: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -101,10 +115,12 @@ export type GroupCountAggregateOutputType = {
 
 export type GroupAvgAggregateInputType = {
   memberCount?: true
+  recurrenceWeekday?: true
 }
 
 export type GroupSumAggregateInputType = {
   memberCount?: true
+  recurrenceWeekday?: true
 }
 
 export type GroupMinAggregateInputType = {
@@ -124,6 +140,10 @@ export type GroupMinAggregateInputType = {
   description?: true
   organizerName?: true
   schedule?: true
+  recurrenceWeekday?: true
+  recurrenceStartTime?: true
+  recurrenceEndTime?: true
+  recurrenceVenue?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -145,6 +165,10 @@ export type GroupMaxAggregateInputType = {
   description?: true
   organizerName?: true
   schedule?: true
+  recurrenceWeekday?: true
+  recurrenceStartTime?: true
+  recurrenceEndTime?: true
+  recurrenceVenue?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -166,6 +190,10 @@ export type GroupCountAggregateInputType = {
   description?: true
   organizerName?: true
   schedule?: true
+  recurrenceWeekday?: true
+  recurrenceStartTime?: true
+  recurrenceEndTime?: true
+  recurrenceVenue?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -274,6 +302,10 @@ export type GroupGroupByOutputType = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday: number | null
+  recurrenceStartTime: string | null
+  recurrenceEndTime: string | null
+  recurrenceVenue: string | null
   createdAt: Date
   updatedAt: Date
   _count: GroupCountAggregateOutputType | null
@@ -318,6 +350,10 @@ export type GroupWhereInput = {
   description?: Prisma.StringFilter<"Group"> | string
   organizerName?: Prisma.StringFilter<"Group"> | string
   schedule?: Prisma.StringFilter<"Group"> | string
+  recurrenceWeekday?: Prisma.IntNullableFilter<"Group"> | number | null
+  recurrenceStartTime?: Prisma.StringNullableFilter<"Group"> | string | null
+  recurrenceEndTime?: Prisma.StringNullableFilter<"Group"> | string | null
+  recurrenceVenue?: Prisma.StringNullableFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   memberships?: Prisma.GroupMembershipListRelationFilter
@@ -342,6 +378,10 @@ export type GroupOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   organizerName?: Prisma.SortOrder
   schedule?: Prisma.SortOrder
+  recurrenceWeekday?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrenceStartTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrenceEndTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrenceVenue?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   memberships?: Prisma.GroupMembershipOrderByRelationAggregateInput
@@ -369,6 +409,10 @@ export type GroupWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Group"> | string
   organizerName?: Prisma.StringFilter<"Group"> | string
   schedule?: Prisma.StringFilter<"Group"> | string
+  recurrenceWeekday?: Prisma.IntNullableFilter<"Group"> | number | null
+  recurrenceStartTime?: Prisma.StringNullableFilter<"Group"> | string | null
+  recurrenceEndTime?: Prisma.StringNullableFilter<"Group"> | string | null
+  recurrenceVenue?: Prisma.StringNullableFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   memberships?: Prisma.GroupMembershipListRelationFilter
@@ -393,6 +437,10 @@ export type GroupOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   organizerName?: Prisma.SortOrder
   schedule?: Prisma.SortOrder
+  recurrenceWeekday?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrenceStartTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrenceEndTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrenceVenue?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.GroupCountOrderByAggregateInput
@@ -422,6 +470,10 @@ export type GroupScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Group"> | string
   organizerName?: Prisma.StringWithAggregatesFilter<"Group"> | string
   schedule?: Prisma.StringWithAggregatesFilter<"Group"> | string
+  recurrenceWeekday?: Prisma.IntNullableWithAggregatesFilter<"Group"> | number | null
+  recurrenceStartTime?: Prisma.StringNullableWithAggregatesFilter<"Group"> | string | null
+  recurrenceEndTime?: Prisma.StringNullableWithAggregatesFilter<"Group"> | string | null
+  recurrenceVenue?: Prisma.StringNullableWithAggregatesFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Group"> | Date | string
 }
@@ -443,6 +495,10 @@ export type GroupCreateInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipCreateNestedManyWithoutGroupInput
@@ -467,6 +523,10 @@ export type GroupUncheckedCreateInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutGroupInput
@@ -491,6 +551,10 @@ export type GroupUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUpdateManyWithoutGroupNestedInput
@@ -515,6 +579,10 @@ export type GroupUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutGroupNestedInput
@@ -539,6 +607,10 @@ export type GroupCreateManyInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -560,6 +632,10 @@ export type GroupUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -581,6 +657,10 @@ export type GroupUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -602,12 +682,17 @@ export type GroupCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   organizerName?: Prisma.SortOrder
   schedule?: Prisma.SortOrder
+  recurrenceWeekday?: Prisma.SortOrder
+  recurrenceStartTime?: Prisma.SortOrder
+  recurrenceEndTime?: Prisma.SortOrder
+  recurrenceVenue?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type GroupAvgOrderByAggregateInput = {
   memberCount?: Prisma.SortOrder
+  recurrenceWeekday?: Prisma.SortOrder
 }
 
 export type GroupMaxOrderByAggregateInput = {
@@ -627,6 +712,10 @@ export type GroupMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   organizerName?: Prisma.SortOrder
   schedule?: Prisma.SortOrder
+  recurrenceWeekday?: Prisma.SortOrder
+  recurrenceStartTime?: Prisma.SortOrder
+  recurrenceEndTime?: Prisma.SortOrder
+  recurrenceVenue?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -648,12 +737,17 @@ export type GroupMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   organizerName?: Prisma.SortOrder
   schedule?: Prisma.SortOrder
+  recurrenceWeekday?: Prisma.SortOrder
+  recurrenceStartTime?: Prisma.SortOrder
+  recurrenceEndTime?: Prisma.SortOrder
+  recurrenceVenue?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type GroupSumOrderByAggregateInput = {
   memberCount?: Prisma.SortOrder
+  recurrenceWeekday?: Prisma.SortOrder
 }
 
 export type GroupScalarRelationFilter = {
@@ -671,6 +765,14 @@ export type EnumMembershipModeFieldUpdateOperationsInput = {
 
 export type IntFieldUpdateOperationsInput = {
   set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -736,6 +838,10 @@ export type GroupCreateWithoutMembershipsInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.ActivitySessionCreateNestedManyWithoutGroupInput
@@ -759,6 +865,10 @@ export type GroupUncheckedCreateWithoutMembershipsInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.ActivitySessionUncheckedCreateNestedManyWithoutGroupInput
@@ -798,6 +908,10 @@ export type GroupUpdateWithoutMembershipsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.ActivitySessionUpdateManyWithoutGroupNestedInput
@@ -821,6 +935,10 @@ export type GroupUncheckedUpdateWithoutMembershipsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.ActivitySessionUncheckedUpdateManyWithoutGroupNestedInput
@@ -844,6 +962,10 @@ export type GroupCreateWithoutCommentsInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipCreateNestedManyWithoutGroupInput
@@ -867,6 +989,10 @@ export type GroupUncheckedCreateWithoutCommentsInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutGroupInput
@@ -906,6 +1032,10 @@ export type GroupUpdateWithoutCommentsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUpdateManyWithoutGroupNestedInput
@@ -929,6 +1059,10 @@ export type GroupUncheckedUpdateWithoutCommentsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutGroupNestedInput
@@ -952,6 +1086,10 @@ export type GroupCreateWithoutSessionsInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipCreateNestedManyWithoutGroupInput
@@ -975,6 +1113,10 @@ export type GroupUncheckedCreateWithoutSessionsInput = {
   description: string
   organizerName: string
   schedule: string
+  recurrenceWeekday?: number | null
+  recurrenceStartTime?: string | null
+  recurrenceEndTime?: string | null
+  recurrenceVenue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutGroupInput
@@ -1014,6 +1156,10 @@ export type GroupUpdateWithoutSessionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUpdateManyWithoutGroupNestedInput
@@ -1037,6 +1183,10 @@ export type GroupUncheckedUpdateWithoutSessionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   organizerName?: Prisma.StringFieldUpdateOperationsInput | string
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  recurrenceWeekday?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  recurrenceStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceVenue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutGroupNestedInput
@@ -1109,6 +1259,10 @@ export type GroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   description?: boolean
   organizerName?: boolean
   schedule?: boolean
+  recurrenceWeekday?: boolean
+  recurrenceStartTime?: boolean
+  recurrenceEndTime?: boolean
+  recurrenceVenue?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   memberships?: boolean | Prisma.Group$membershipsArgs<ExtArgs>
@@ -1134,6 +1288,10 @@ export type GroupSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   organizerName?: boolean
   schedule?: boolean
+  recurrenceWeekday?: boolean
+  recurrenceStartTime?: boolean
+  recurrenceEndTime?: boolean
+  recurrenceVenue?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["group"]>
@@ -1155,6 +1313,10 @@ export type GroupSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   organizerName?: boolean
   schedule?: boolean
+  recurrenceWeekday?: boolean
+  recurrenceStartTime?: boolean
+  recurrenceEndTime?: boolean
+  recurrenceVenue?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["group"]>
@@ -1176,11 +1338,15 @@ export type GroupSelectScalar = {
   description?: boolean
   organizerName?: boolean
   schedule?: boolean
+  recurrenceWeekday?: boolean
+  recurrenceStartTime?: boolean
+  recurrenceEndTime?: boolean
+  recurrenceVenue?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "sport" | "sportSlug" | "location" | "timeLabel" | "participation" | "membershipMode" | "memberCount" | "recommended" | "tone" | "accent" | "description" | "organizerName" | "schedule" | "createdAt" | "updatedAt", ExtArgs["result"]["group"]>
+export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "sport" | "sportSlug" | "location" | "timeLabel" | "participation" | "membershipMode" | "memberCount" | "recommended" | "tone" | "accent" | "description" | "organizerName" | "schedule" | "recurrenceWeekday" | "recurrenceStartTime" | "recurrenceEndTime" | "recurrenceVenue" | "createdAt" | "updatedAt", ExtArgs["result"]["group"]>
 export type GroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | Prisma.Group$membershipsArgs<ExtArgs>
   sessions?: boolean | Prisma.Group$sessionsArgs<ExtArgs>
@@ -1214,6 +1380,10 @@ export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     description: string
     organizerName: string
     schedule: string
+    recurrenceWeekday: number | null
+    recurrenceStartTime: string | null
+    recurrenceEndTime: string | null
+    recurrenceVenue: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["group"]>
@@ -1658,6 +1828,10 @@ export interface GroupFieldRefs {
   readonly description: Prisma.FieldRef<"Group", 'String'>
   readonly organizerName: Prisma.FieldRef<"Group", 'String'>
   readonly schedule: Prisma.FieldRef<"Group", 'String'>
+  readonly recurrenceWeekday: Prisma.FieldRef<"Group", 'Int'>
+  readonly recurrenceStartTime: Prisma.FieldRef<"Group", 'String'>
+  readonly recurrenceEndTime: Prisma.FieldRef<"Group", 'String'>
+  readonly recurrenceVenue: Prisma.FieldRef<"Group", 'String'>
   readonly createdAt: Prisma.FieldRef<"Group", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Group", 'DateTime'>
 }

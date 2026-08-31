@@ -1,6 +1,7 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import type { AttendanceChoice, GroupCommentView, GroupPageData, JoinedGroupCard, PublicGroupCard, UpcomingActivity } from "./contracts";
+import { ensureNextRecurringSession } from "./recurrence";
 
 type GroupWithNextSession = Prisma.GroupGetPayload<{
   include: { sessions: true };
@@ -78,10 +79,21 @@ function toGroupPageData(
     nextTraining: next
       ? {
           id: next.id,
+          title: next.title,
+          startsAt: next.startsAt.toISOString(),
+          endsAt: next.endsAt.toISOString(),
           date: formatDate(next.startsAt),
           time: `${stockholmTimeFormatter.format(next.startsAt)}–${stockholmTimeFormatter.format(next.endsAt)}`,
           venue: next.venue,
           goingCount: next.goingCount,
+        }
+      : null,
+    recurrence: group.recurrenceWeekday !== null && group.recurrenceStartTime && group.recurrenceEndTime && group.recurrenceVenue
+      ? {
+          weekday: group.recurrenceWeekday,
+          startTime: group.recurrenceStartTime,
+          endTime: group.recurrenceEndTime,
+          venue: group.recurrenceVenue,
         }
       : null,
     comments: group.comments.map((comment): GroupCommentView => ({
@@ -170,6 +182,12 @@ export async function getGroupPageData(
   slug: string,
   userId?: string,
 ): Promise<GroupPageData | null> {
+  const recurringGroup = await prisma.group.findUnique({
+    where: { slug },
+    select: { id: true, slug: true, recurrenceWeekday: true, recurrenceStartTime: true, recurrenceEndTime: true, recurrenceVenue: true },
+  });
+  if (recurringGroup) await ensureNextRecurringSession(recurringGroup);
+
   if (!userId) {
     const group = await prisma.group.findUnique({
       where: { slug },
@@ -187,6 +205,7 @@ export async function getGroupPageData(
       ? toGroupPageData(group, {
           isAuthenticated: false,
           isMember: false,
+          canEdit: false,
           attendanceStatus: null,
         })
       : null;
@@ -197,7 +216,7 @@ export async function getGroupPageData(
     include: {
       memberships: {
         where: { userId, status: "ACTIVE" },
-        select: { id: true },
+        select: { id: true, role: true },
       },
       comments: {
         include: { user: { select: { name: true } } },
@@ -223,6 +242,7 @@ export async function getGroupPageData(
   return toGroupPageData(group, {
     isAuthenticated: true,
     isMember: group.memberships.length > 0,
+    canEdit: group.memberships.some((membership) => membership.role === "ORGANIZER"),
     attendanceStatus: group.sessions[0]?.attendance[0]?.status as AttendanceChoice | undefined ?? null,
   });
 }

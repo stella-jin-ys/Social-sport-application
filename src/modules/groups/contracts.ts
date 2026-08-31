@@ -65,10 +65,20 @@ export type GroupPageData = PublicGroupCard & {
   viewer: {
     isAuthenticated: boolean;
     isMember: boolean;
+    canEdit: boolean;
     attendanceStatus: AttendanceChoice | null;
   };
+  recurrence: {
+    weekday: number;
+    startTime: string;
+    endTime: string;
+    venue: string;
+  } | null;
   nextTraining: {
     id: string;
+    title?: string;
+    startsAt?: string;
+    endsAt?: string;
     date: string;
     time: string;
     venue: string;
@@ -87,3 +97,16 @@ export type GroupCommentView = {
 export type CommentActionResult =
   | { ok: true; comment: GroupCommentView }
   | { ok: false; code: "AUTH_REQUIRED" | "NOT_MEMBER" | "GROUP_NOT_FOUND" | "INVALID_BODY" | "UNKNOWN"; message: string };
+
+export type GroupUpdateInput = {
+  sport: string;
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  venue: string;
+};
+
+export type GroupUpdateActionResult =
+  | { ok: true }
+  | { ok: false; code: "AUTH_REQUIRED" | "NOT_ORGANIZER" | "GROUP_NOT_FOUND" | "INVALID_INPUT" | "UNKNOWN"; message: string };
