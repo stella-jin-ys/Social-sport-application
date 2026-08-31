@@ -202,6 +202,7 @@ export type UserWhereInput = {
   accounts?: Prisma.AccountListRelationFilter
   groupMemberships?: Prisma.GroupMembershipListRelationFilter
   attendanceResponses?: Prisma.AttendanceResponseListRelationFilter
+  comments?: Prisma.GroupCommentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -216,6 +217,7 @@ export type UserOrderByWithRelationInput = {
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   groupMemberships?: Prisma.GroupMembershipOrderByRelationAggregateInput
   attendanceResponses?: Prisma.AttendanceResponseOrderByRelationAggregateInput
+  comments?: Prisma.GroupCommentOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -233,6 +235,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   accounts?: Prisma.AccountListRelationFilter
   groupMemberships?: Prisma.GroupMembershipListRelationFilter
   attendanceResponses?: Prisma.AttendanceResponseListRelationFilter
+  comments?: Prisma.GroupCommentListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -273,6 +276,7 @@ export type UserCreateInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   groupMemberships?: Prisma.GroupMembershipCreateNestedManyWithoutUserInput
   attendanceResponses?: Prisma.AttendanceResponseCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -287,6 +291,7 @@ export type UserUncheckedCreateInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   groupMemberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutUserInput
   attendanceResponses?: Prisma.AttendanceResponseUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -301,6 +306,7 @@ export type UserUpdateInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   groupMemberships?: Prisma.GroupMembershipUpdateManyWithoutUserNestedInput
   attendanceResponses?: Prisma.AttendanceResponseUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -315,6 +321,7 @@ export type UserUncheckedUpdateInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   groupMemberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutUserNestedInput
   attendanceResponses?: Prisma.AttendanceResponseUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -440,6 +447,20 @@ export type UserUpdateOneRequiredWithoutGroupMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGroupMembershipsInput, Prisma.UserUpdateWithoutGroupMembershipsInput>, Prisma.UserUncheckedUpdateWithoutGroupMembershipsInput>
 }
 
+export type UserCreateNestedOneWithoutCommentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCommentsInput, Prisma.UserUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCommentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCommentsInput, Prisma.UserUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCommentsInput
+  upsert?: Prisma.UserUpsertWithoutCommentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCommentsInput, Prisma.UserUpdateWithoutCommentsInput>, Prisma.UserUncheckedUpdateWithoutCommentsInput>
+}
+
 export type UserCreateNestedOneWithoutAttendanceResponsesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAttendanceResponsesInput, Prisma.UserUncheckedCreateWithoutAttendanceResponsesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAttendanceResponsesInput
@@ -465,6 +486,7 @@ export type UserCreateWithoutSessionsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   groupMemberships?: Prisma.GroupMembershipCreateNestedManyWithoutUserInput
   attendanceResponses?: Prisma.AttendanceResponseCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -478,6 +500,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   groupMemberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutUserInput
   attendanceResponses?: Prisma.AttendanceResponseUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -507,6 +530,7 @@ export type UserUpdateWithoutSessionsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   groupMemberships?: Prisma.GroupMembershipUpdateManyWithoutUserNestedInput
   attendanceResponses?: Prisma.AttendanceResponseUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -520,6 +544,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   groupMemberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutUserNestedInput
   attendanceResponses?: Prisma.AttendanceResponseUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -533,6 +558,7 @@ export type UserCreateWithoutAccountsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   groupMemberships?: Prisma.GroupMembershipCreateNestedManyWithoutUserInput
   attendanceResponses?: Prisma.AttendanceResponseCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -546,6 +572,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   groupMemberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutUserInput
   attendanceResponses?: Prisma.AttendanceResponseUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -575,6 +602,7 @@ export type UserUpdateWithoutAccountsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   groupMemberships?: Prisma.GroupMembershipUpdateManyWithoutUserNestedInput
   attendanceResponses?: Prisma.AttendanceResponseUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -588,6 +616,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   groupMemberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutUserNestedInput
   attendanceResponses?: Prisma.AttendanceResponseUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGroupMembershipsInput = {
@@ -601,6 +630,7 @@ export type UserCreateWithoutGroupMembershipsInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   attendanceResponses?: Prisma.AttendanceResponseCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGroupMembershipsInput = {
@@ -614,6 +644,7 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   attendanceResponses?: Prisma.AttendanceResponseUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGroupMembershipsInput = {
@@ -643,6 +674,7 @@ export type UserUpdateWithoutGroupMembershipsInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   attendanceResponses?: Prisma.AttendanceResponseUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -655,6 +687,79 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  attendanceResponses?: Prisma.AttendanceResponseUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCommentsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  groupMemberships?: Prisma.GroupMembershipCreateNestedManyWithoutUserInput
+  attendanceResponses?: Prisma.AttendanceResponseCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCommentsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  groupMemberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutUserInput
+  attendanceResponses?: Prisma.AttendanceResponseUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCommentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCommentsInput, Prisma.UserUncheckedCreateWithoutCommentsInput>
+}
+
+export type UserUpsertWithoutCommentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCommentsInput, Prisma.UserUncheckedUpdateWithoutCommentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCommentsInput, Prisma.UserUncheckedCreateWithoutCommentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCommentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCommentsInput, Prisma.UserUncheckedUpdateWithoutCommentsInput>
+}
+
+export type UserUpdateWithoutCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  groupMemberships?: Prisma.GroupMembershipUpdateManyWithoutUserNestedInput
+  attendanceResponses?: Prisma.AttendanceResponseUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  groupMemberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutUserNestedInput
   attendanceResponses?: Prisma.AttendanceResponseUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -669,6 +774,7 @@ export type UserCreateWithoutAttendanceResponsesInput = {
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   groupMemberships?: Prisma.GroupMembershipCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAttendanceResponsesInput = {
@@ -682,6 +788,7 @@ export type UserUncheckedCreateWithoutAttendanceResponsesInput = {
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   groupMemberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.GroupCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAttendanceResponsesInput = {
@@ -711,6 +818,7 @@ export type UserUpdateWithoutAttendanceResponsesInput = {
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   groupMemberships?: Prisma.GroupMembershipUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttendanceResponsesInput = {
@@ -724,6 +832,7 @@ export type UserUncheckedUpdateWithoutAttendanceResponsesInput = {
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   groupMemberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.GroupCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -736,6 +845,7 @@ export type UserCountOutputType = {
   accounts: number
   groupMemberships: number
   attendanceResponses: number
+  comments: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -743,6 +853,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   groupMemberships?: boolean | UserCountOutputTypeCountGroupMembershipsArgs
   attendanceResponses?: boolean | UserCountOutputTypeCountAttendanceResponsesArgs
+  comments?: boolean | UserCountOutputTypeCountCommentsArgs
 }
 
 /**
@@ -783,6 +894,13 @@ export type UserCountOutputTypeCountAttendanceResponsesArgs<ExtArgs extends runt
   where?: Prisma.AttendanceResponseWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GroupCommentWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -796,6 +914,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   groupMemberships?: boolean | Prisma.User$groupMembershipsArgs<ExtArgs>
   attendanceResponses?: boolean | Prisma.User$attendanceResponsesArgs<ExtArgs>
+  comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -835,6 +954,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   groupMemberships?: boolean | Prisma.User$groupMembershipsArgs<ExtArgs>
   attendanceResponses?: boolean | Prisma.User$attendanceResponsesArgs<ExtArgs>
+  comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -847,6 +967,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     groupMemberships: Prisma.$GroupMembershipPayload<ExtArgs>[]
     attendanceResponses: Prisma.$AttendanceResponsePayload<ExtArgs>[]
+    comments: Prisma.$GroupCommentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1254,6 +1375,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groupMemberships<T extends Prisma.User$groupMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$groupMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attendanceResponses<T extends Prisma.User$attendanceResponsesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attendanceResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  comments<T extends Prisma.User$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1776,6 +1898,30 @@ export type User$attendanceResponsesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.AttendanceResponseScalarFieldEnum | Prisma.AttendanceResponseScalarFieldEnum[]
+}
+
+/**
+ * User.comments
+ */
+export type User$commentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GroupComment
+   */
+  select?: Prisma.GroupCommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GroupComment
+   */
+  omit?: Prisma.GroupCommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupCommentInclude<ExtArgs> | null
+  where?: Prisma.GroupCommentWhereInput
+  orderBy?: Prisma.GroupCommentOrderByWithRelationInput | Prisma.GroupCommentOrderByWithRelationInput[]
+  cursor?: Prisma.GroupCommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GroupCommentScalarFieldEnum | Prisma.GroupCommentScalarFieldEnum[]
 }
 
 /**

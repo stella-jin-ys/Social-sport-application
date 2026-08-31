@@ -57,6 +57,7 @@ export const ModelName = {
   Verification: 'Verification',
   Group: 'Group',
   GroupMembership: 'GroupMembership',
+  GroupComment: 'GroupComment',
   ActivitySession: 'ActivitySession',
   AttendanceResponse: 'AttendanceResponse'
 } as const
@@ -172,6 +173,18 @@ export const GroupMembershipScalarFieldEnum = {
 } as const
 
 export type GroupMembershipScalarFieldEnum = (typeof GroupMembershipScalarFieldEnum)[keyof typeof GroupMembershipScalarFieldEnum]
+
+
+export const GroupCommentScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  userId: 'userId',
+  body: 'body',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GroupCommentScalarFieldEnum = (typeof GroupCommentScalarFieldEnum)[keyof typeof GroupCommentScalarFieldEnum]
 
 
 export const ActivitySessionScalarFieldEnum = {

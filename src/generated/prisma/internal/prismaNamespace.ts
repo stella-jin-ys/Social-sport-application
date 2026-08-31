@@ -403,6 +403,7 @@ export const ModelName = {
   Verification: 'Verification',
   Group: 'Group',
   GroupMembership: 'GroupMembership',
+  GroupComment: 'GroupComment',
   ActivitySession: 'ActivitySession',
   AttendanceResponse: 'AttendanceResponse'
 } as const
@@ -420,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "group" | "groupMembership" | "activitySession" | "attendanceResponse"
+    modelProps: "user" | "session" | "account" | "verification" | "group" | "groupMembership" | "groupComment" | "activitySession" | "attendanceResponse"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -868,6 +869,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GroupComment: {
+      payload: Prisma.$GroupCommentPayload<ExtArgs>
+      fields: Prisma.GroupCommentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GroupCommentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GroupCommentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>
+        }
+        findFirst: {
+          args: Prisma.GroupCommentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GroupCommentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>
+        }
+        findMany: {
+          args: Prisma.GroupCommentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>[]
+        }
+        create: {
+          args: Prisma.GroupCommentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>
+        }
+        createMany: {
+          args: Prisma.GroupCommentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GroupCommentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>[]
+        }
+        delete: {
+          args: Prisma.GroupCommentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>
+        }
+        update: {
+          args: Prisma.GroupCommentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>
+        }
+        deleteMany: {
+          args: Prisma.GroupCommentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GroupCommentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GroupCommentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>[]
+        }
+        upsert: {
+          args: Prisma.GroupCommentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GroupCommentPayload>
+        }
+        aggregate: {
+          args: Prisma.GroupCommentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGroupComment>
+        }
+        groupBy: {
+          args: Prisma.GroupCommentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroupCommentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GroupCommentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GroupCommentCountAggregateOutputType> | number
+        }
+      }
+    }
     ActivitySession: {
       payload: Prisma.$ActivitySessionPayload<ExtArgs>
       fields: Prisma.ActivitySessionFieldRefs
@@ -1150,6 +1225,18 @@ export const GroupMembershipScalarFieldEnum = {
 } as const
 
 export type GroupMembershipScalarFieldEnum = (typeof GroupMembershipScalarFieldEnum)[keyof typeof GroupMembershipScalarFieldEnum]
+
+
+export const GroupCommentScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  userId: 'userId',
+  body: 'body',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GroupCommentScalarFieldEnum = (typeof GroupCommentScalarFieldEnum)[keyof typeof GroupCommentScalarFieldEnum]
 
 
 export const ActivitySessionScalarFieldEnum = {
@@ -1499,6 +1586,7 @@ export type GlobalOmitConfig = {
   verification?: Prisma.VerificationOmit
   group?: Prisma.GroupOmit
   groupMembership?: Prisma.GroupMembershipOmit
+  groupComment?: Prisma.GroupCommentOmit
   activitySession?: Prisma.ActivitySessionOmit
   attendanceResponse?: Prisma.AttendanceResponseOmit
 }

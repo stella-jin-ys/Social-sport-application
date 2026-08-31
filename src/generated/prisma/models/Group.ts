@@ -322,6 +322,7 @@ export type GroupWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   memberships?: Prisma.GroupMembershipListRelationFilter
   sessions?: Prisma.ActivitySessionListRelationFilter
+  comments?: Prisma.GroupCommentListRelationFilter
 }
 
 export type GroupOrderByWithRelationInput = {
@@ -345,6 +346,7 @@ export type GroupOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   memberships?: Prisma.GroupMembershipOrderByRelationAggregateInput
   sessions?: Prisma.ActivitySessionOrderByRelationAggregateInput
+  comments?: Prisma.GroupCommentOrderByRelationAggregateInput
 }
 
 export type GroupWhereUniqueInput = Prisma.AtLeast<{
@@ -371,6 +373,7 @@ export type GroupWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   memberships?: Prisma.GroupMembershipListRelationFilter
   sessions?: Prisma.ActivitySessionListRelationFilter
+  comments?: Prisma.GroupCommentListRelationFilter
 }, "id" | "slug">
 
 export type GroupOrderByWithAggregationInput = {
@@ -444,6 +447,7 @@ export type GroupCreateInput = {
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipCreateNestedManyWithoutGroupInput
   sessions?: Prisma.ActivitySessionCreateNestedManyWithoutGroupInput
+  comments?: Prisma.GroupCommentCreateNestedManyWithoutGroupInput
 }
 
 export type GroupUncheckedCreateInput = {
@@ -467,6 +471,7 @@ export type GroupUncheckedCreateInput = {
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutGroupInput
   sessions?: Prisma.ActivitySessionUncheckedCreateNestedManyWithoutGroupInput
+  comments?: Prisma.GroupCommentUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type GroupUpdateInput = {
@@ -490,6 +495,7 @@ export type GroupUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUpdateManyWithoutGroupNestedInput
   sessions?: Prisma.ActivitySessionUpdateManyWithoutGroupNestedInput
+  comments?: Prisma.GroupCommentUpdateManyWithoutGroupNestedInput
 }
 
 export type GroupUncheckedUpdateInput = {
@@ -513,6 +519,7 @@ export type GroupUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutGroupNestedInput
   sessions?: Prisma.ActivitySessionUncheckedUpdateManyWithoutGroupNestedInput
+  comments?: Prisma.GroupCommentUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 export type GroupCreateManyInput = {
@@ -684,6 +691,20 @@ export type GroupUpdateOneRequiredWithoutMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GroupUpdateToOneWithWhereWithoutMembershipsInput, Prisma.GroupUpdateWithoutMembershipsInput>, Prisma.GroupUncheckedUpdateWithoutMembershipsInput>
 }
 
+export type GroupCreateNestedOneWithoutCommentsInput = {
+  create?: Prisma.XOR<Prisma.GroupCreateWithoutCommentsInput, Prisma.GroupUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.GroupCreateOrConnectWithoutCommentsInput
+  connect?: Prisma.GroupWhereUniqueInput
+}
+
+export type GroupUpdateOneRequiredWithoutCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.GroupCreateWithoutCommentsInput, Prisma.GroupUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.GroupCreateOrConnectWithoutCommentsInput
+  upsert?: Prisma.GroupUpsertWithoutCommentsInput
+  connect?: Prisma.GroupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GroupUpdateToOneWithWhereWithoutCommentsInput, Prisma.GroupUpdateWithoutCommentsInput>, Prisma.GroupUncheckedUpdateWithoutCommentsInput>
+}
+
 export type GroupCreateNestedOneWithoutSessionsInput = {
   create?: Prisma.XOR<Prisma.GroupCreateWithoutSessionsInput, Prisma.GroupUncheckedCreateWithoutSessionsInput>
   connectOrCreate?: Prisma.GroupCreateOrConnectWithoutSessionsInput
@@ -718,6 +739,7 @@ export type GroupCreateWithoutMembershipsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.ActivitySessionCreateNestedManyWithoutGroupInput
+  comments?: Prisma.GroupCommentCreateNestedManyWithoutGroupInput
 }
 
 export type GroupUncheckedCreateWithoutMembershipsInput = {
@@ -740,6 +762,7 @@ export type GroupUncheckedCreateWithoutMembershipsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.ActivitySessionUncheckedCreateNestedManyWithoutGroupInput
+  comments?: Prisma.GroupCommentUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type GroupCreateOrConnectWithoutMembershipsInput = {
@@ -778,6 +801,7 @@ export type GroupUpdateWithoutMembershipsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.ActivitySessionUpdateManyWithoutGroupNestedInput
+  comments?: Prisma.GroupCommentUpdateManyWithoutGroupNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutMembershipsInput = {
@@ -799,6 +823,115 @@ export type GroupUncheckedUpdateWithoutMembershipsInput = {
   schedule?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.ActivitySessionUncheckedUpdateManyWithoutGroupNestedInput
+  comments?: Prisma.GroupCommentUncheckedUpdateManyWithoutGroupNestedInput
+}
+
+export type GroupCreateWithoutCommentsInput = {
+  id?: string
+  slug: string
+  name: string
+  sport: string
+  sportSlug: string
+  location: string
+  timeLabel: string
+  participation: $Enums.ParticipationType
+  membershipMode?: $Enums.MembershipMode
+  memberCount?: number
+  recommended?: boolean
+  tone: string
+  accent: string
+  description: string
+  organizerName: string
+  schedule: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.GroupMembershipCreateNestedManyWithoutGroupInput
+  sessions?: Prisma.ActivitySessionCreateNestedManyWithoutGroupInput
+}
+
+export type GroupUncheckedCreateWithoutCommentsInput = {
+  id?: string
+  slug: string
+  name: string
+  sport: string
+  sportSlug: string
+  location: string
+  timeLabel: string
+  participation: $Enums.ParticipationType
+  membershipMode?: $Enums.MembershipMode
+  memberCount?: number
+  recommended?: boolean
+  tone: string
+  accent: string
+  description: string
+  organizerName: string
+  schedule: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutGroupInput
+  sessions?: Prisma.ActivitySessionUncheckedCreateNestedManyWithoutGroupInput
+}
+
+export type GroupCreateOrConnectWithoutCommentsInput = {
+  where: Prisma.GroupWhereUniqueInput
+  create: Prisma.XOR<Prisma.GroupCreateWithoutCommentsInput, Prisma.GroupUncheckedCreateWithoutCommentsInput>
+}
+
+export type GroupUpsertWithoutCommentsInput = {
+  update: Prisma.XOR<Prisma.GroupUpdateWithoutCommentsInput, Prisma.GroupUncheckedUpdateWithoutCommentsInput>
+  create: Prisma.XOR<Prisma.GroupCreateWithoutCommentsInput, Prisma.GroupUncheckedCreateWithoutCommentsInput>
+  where?: Prisma.GroupWhereInput
+}
+
+export type GroupUpdateToOneWithWhereWithoutCommentsInput = {
+  where?: Prisma.GroupWhereInput
+  data: Prisma.XOR<Prisma.GroupUpdateWithoutCommentsInput, Prisma.GroupUncheckedUpdateWithoutCommentsInput>
+}
+
+export type GroupUpdateWithoutCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sport?: Prisma.StringFieldUpdateOperationsInput | string
+  sportSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  timeLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  participation?: Prisma.EnumParticipationTypeFieldUpdateOperationsInput | $Enums.ParticipationType
+  membershipMode?: Prisma.EnumMembershipModeFieldUpdateOperationsInput | $Enums.MembershipMode
+  memberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  recommended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tone?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  organizerName?: Prisma.StringFieldUpdateOperationsInput | string
+  schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.GroupMembershipUpdateManyWithoutGroupNestedInput
+  sessions?: Prisma.ActivitySessionUpdateManyWithoutGroupNestedInput
+}
+
+export type GroupUncheckedUpdateWithoutCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sport?: Prisma.StringFieldUpdateOperationsInput | string
+  sportSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  timeLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  participation?: Prisma.EnumParticipationTypeFieldUpdateOperationsInput | $Enums.ParticipationType
+  membershipMode?: Prisma.EnumMembershipModeFieldUpdateOperationsInput | $Enums.MembershipMode
+  memberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  recommended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tone?: Prisma.StringFieldUpdateOperationsInput | string
+  accent?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  organizerName?: Prisma.StringFieldUpdateOperationsInput | string
+  schedule?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutGroupNestedInput
   sessions?: Prisma.ActivitySessionUncheckedUpdateManyWithoutGroupNestedInput
 }
 
@@ -822,6 +955,7 @@ export type GroupCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipCreateNestedManyWithoutGroupInput
+  comments?: Prisma.GroupCommentCreateNestedManyWithoutGroupInput
 }
 
 export type GroupUncheckedCreateWithoutSessionsInput = {
@@ -844,6 +978,7 @@ export type GroupUncheckedCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.GroupMembershipUncheckedCreateNestedManyWithoutGroupInput
+  comments?: Prisma.GroupCommentUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type GroupCreateOrConnectWithoutSessionsInput = {
@@ -882,6 +1017,7 @@ export type GroupUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUpdateManyWithoutGroupNestedInput
+  comments?: Prisma.GroupCommentUpdateManyWithoutGroupNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutSessionsInput = {
@@ -904,6 +1040,7 @@ export type GroupUncheckedUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.GroupMembershipUncheckedUpdateManyWithoutGroupNestedInput
+  comments?: Prisma.GroupCommentUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 
@@ -914,11 +1051,13 @@ export type GroupUncheckedUpdateWithoutSessionsInput = {
 export type GroupCountOutputType = {
   memberships: number
   sessions: number
+  comments: number
 }
 
 export type GroupCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | GroupCountOutputTypeCountMembershipsArgs
   sessions?: boolean | GroupCountOutputTypeCountSessionsArgs
+  comments?: boolean | GroupCountOutputTypeCountCommentsArgs
 }
 
 /**
@@ -945,6 +1084,13 @@ export type GroupCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.ActivitySessionWhereInput
 }
 
+/**
+ * GroupCountOutputType without action
+ */
+export type GroupCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GroupCommentWhereInput
+}
+
 
 export type GroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -967,6 +1113,7 @@ export type GroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   memberships?: boolean | Prisma.Group$membershipsArgs<ExtArgs>
   sessions?: boolean | Prisma.Group$sessionsArgs<ExtArgs>
+  comments?: boolean | Prisma.Group$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.GroupCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["group"]>
 
@@ -1037,6 +1184,7 @@ export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type GroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | Prisma.Group$membershipsArgs<ExtArgs>
   sessions?: boolean | Prisma.Group$sessionsArgs<ExtArgs>
+  comments?: boolean | Prisma.Group$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.GroupCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GroupIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1047,6 +1195,7 @@ export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     memberships: Prisma.$GroupMembershipPayload<ExtArgs>[]
     sessions: Prisma.$ActivitySessionPayload<ExtArgs>[]
+    comments: Prisma.$GroupCommentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1463,6 +1612,7 @@ export interface Prisma__GroupClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   memberships<T extends Prisma.Group$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.Group$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivitySessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  comments<T extends Prisma.Group$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1948,6 +2098,30 @@ export type Group$sessionsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.ActivitySessionScalarFieldEnum | Prisma.ActivitySessionScalarFieldEnum[]
+}
+
+/**
+ * Group.comments
+ */
+export type Group$commentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GroupComment
+   */
+  select?: Prisma.GroupCommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GroupComment
+   */
+  omit?: Prisma.GroupCommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupCommentInclude<ExtArgs> | null
+  where?: Prisma.GroupCommentWhereInput
+  orderBy?: Prisma.GroupCommentOrderByWithRelationInput | Prisma.GroupCommentOrderByWithRelationInput[]
+  cursor?: Prisma.GroupCommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GroupCommentScalarFieldEnum | Prisma.GroupCommentScalarFieldEnum[]
 }
 
 /**

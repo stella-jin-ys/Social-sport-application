@@ -72,6 +72,11 @@ export type Group = Prisma.GroupModel
  */
 export type GroupMembership = Prisma.GroupMembershipModel
 /**
+ * Model GroupComment
+ * 
+ */
+export type GroupComment = Prisma.GroupCommentModel
+/**
  * Model ActivitySession
  * 
  */
