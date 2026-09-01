@@ -323,7 +323,7 @@ Expected: all tests pass, typecheck and lint pass, and no new feature-scoped acc
 
 - [ ] **Step 3: Update the active ledger and commit verification artifacts**
 
-Record exact test counts, any environment warnings, and the final commit range in `.superpowers/sdd/2026-08-28-one-time-events-personal-schedule/progress.md`. Update `docs/superpowers/README.md` only if the active-plan pointer changes.
+Record exact test counts, any environment warnings, and the final commit range in the implementation notes for this plan. Update `docs/superpowers/README.md` only if the active-plan pointer changes.
 
 - [ ] **Step 4: Commit final verification changes**
 
