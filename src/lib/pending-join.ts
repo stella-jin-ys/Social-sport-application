@@ -1,6 +1,6 @@
 export type PendingJoin = { groupSlug: string; returnTo: string };
 
-const intentKey = "huddle:pending-join";
+const intentKey = "sportship:pending-join";
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function validate(intent: PendingJoin) {
