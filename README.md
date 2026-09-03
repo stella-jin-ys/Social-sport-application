@@ -1,6 +1,6 @@
 # Sportship
 
-Sportship is a mobile-first social sports platform for finding and joining local sports groups. Users can choose a sport and city, explore nearby groups, view upcoming activities, join communities, and discuss plans with members.
+Sportship is a social sports web app for finding and joining local sports groups. Users can choose a sport and city, explore nearby groups, view upcoming activities, join communities, and discuss plans with members.
 
 ## Live application
 
@@ -8,7 +8,7 @@ Sportship is a mobile-first social sports platform for finding and joining local
 
 ## Project
 
-This repository contains the Sportship web application and its Capacitor shells for iOS and Android.
+This repository contains the Sportship web application deployed on Vercel.
 
 The app includes:
 
@@ -25,45 +25,18 @@ The app includes:
 - `src/app/` contains the Next.js routes and UI
 - `src/components/` contains reusable interface components
 - `src/modules/` contains group, membership, and attendance logic
-- `prisma/` contains the PostgreSQL schema and seed data
-- `android/` and `ios/` contain the Capacitor native projects
+- `prisma/` contains the PostgreSQL schema and migrations
 
-The web app uses Next.js, React, TypeScript, PostgreSQL, Prisma, Better Auth, and Capacitor.
+The web app uses Next.js, React, TypeScript, PostgreSQL, Prisma, and Better Auth.
 
-## Local development
-
-Install dependencies:
+## Deployment
 
 ```bash
 pnpm install
-```
-
-Copy `.env.example` to `.env` and set the database and authentication values. For the local PostgreSQL database, start the included service:
-
-```bash
-docker compose up -d
-pnpm exec prisma db push
-pnpm db:seed
-```
-
-Start the development server:
-
-```bash
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
-## Mobile shells
-
-After building the web app, synchronize the Capacitor projects:
-
-```bash
 pnpm build
-pnpm mobile:sync
 ```
 
-Use `pnpm mobile:open:ios` or `pnpm mobile:open:android` to open the native project.
+Configure `DATABASE_URL`, `BETTER_AUTH_URL`, and `BETTER_AUTH_SECRET` in the Vercel project settings.
 
 ## Repository
 

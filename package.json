@@ -6,12 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "db:seed": "tsx prisma/seed.ts",
-    "mobile:sync": "cap sync",
-    "mobile:open:ios": "cap open ios",
-    "mobile:open:android": "cap open android"
+    "typecheck": "tsc --noEmit"
   },
   "devEngines": {
     "packageManager": {
@@ -23,9 +18,6 @@
   "type": "module",
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.7.1",
-    "@capacitor/android": "^8.5.0",
-    "@capacitor/core": "^8.5.0",
-    "@capacitor/ios": "^8.5.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "better-auth": "^1.7.1",
@@ -36,18 +28,13 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@capacitor/cli": "^8.5.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^24.13.3",
     "@types/pg": "^8.23.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
-    "@vitejs/plugin-react": "^6.1.0",
-    "eslint": "^9.39.5",
-    "eslint-config-next": "^16.3.3",
     "prisma": "^7.10.0",
     "tailwindcss": "^4.3.3",
-    "tsx": "^4.21.0",
     "typescript": "~5.9.3"
   }
 }
